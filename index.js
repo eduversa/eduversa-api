@@ -1,17 +1,34 @@
-require("dotenv").config()
-const express = require("express")
-const cors = require("cors")
-const {connectToServer, clearAllCollections} = require("./config/db.config")
-const accountRouter = require("./routes/accounts.routes")
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const { connectToServer, clearAllCollections } = require("./config/db.config");
+const accountRouter = require("./routes/accounts.routes");
 
-const app = express()
+const app = express();
 const port = process.env.PORT;
 
-const corsOptions = {
+// const corsOptions = {
 
-}
-app.use(express.json()) 
-app.use(cors(corsOptions))
+// }
+app.use(express.json());
+// app.use(cors(corsOptions))
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://192.168.0.100:3000",
+      "http://192.168.0.101:3000",
+      "http://192.168.0.102:3000",
+      "https://eduversa.github.io",
+    ],
+    methods: "GET,POST,PUT,DELETE,PATCH,UPDATE,HEAD",
+    allowedHeaders:
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    credentials: true,
+  })
+);
 
 //yellow-f// DEFAULT ROUTE START
 app.get("/connection", async (req, res)=>{
@@ -28,9 +45,6 @@ app.get("/", (req, res)=>{
 })
 //yellow-f// DEFAULT ROUTE END
 
-app.use("/account", accountRouter)
-
-
-
+app.use("/account", accountRouter);
 
 connectToServer(app, port);
