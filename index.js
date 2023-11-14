@@ -23,7 +23,7 @@ app.delete("/connection/reset", async (req, res)=>{
 app.get("/", (req, res)=>{
     res.send({
         status: "working",
-        help: []
+        help: ["/account"]
     })
 })
 //yellow-f// DEFAULT ROUTE END

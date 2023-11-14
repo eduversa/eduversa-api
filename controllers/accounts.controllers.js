@@ -29,7 +29,8 @@ const createNewAccount = async (req, res) => {
    
 
     const user_id = generateUserID();
-    const password = genearatePassword();
+    // const password = genearatePassword();
+    const password = "Test@1234";
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const token = jwt.sign({ email, user_id }, process.env.SECRET_KEY);

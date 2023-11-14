@@ -29,6 +29,10 @@ const accountSchema = mongoose.Schema(
     otp: {
       type: String,
     },
+    type: {
+      type: String,
+      default: "applicant"
+    },
     tokens: [
       {
         token: { type: String },
