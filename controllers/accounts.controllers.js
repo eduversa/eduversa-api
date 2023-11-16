@@ -200,7 +200,7 @@ const loginToAccount = async (req, res) => {
 
     const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {tokens}, {new: true});
 
-    res.status(200).send({status: true, message: "Logged In Successfully"})
+    res.status(200).send({status: true, message: "Logged In Successfully", data: updatedAccount, authToken: token})
 
 
   } catch (error) {
