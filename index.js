@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { connectToServer, clearAllCollections } = require("./config/db.config");
 const accountRouter = require("./routes/accounts.routes");
+const applicantRouter = require("./routes/applicant.routes");
 
 const app = express();
 const port = process.env.PORT;
@@ -46,5 +47,6 @@ app.get("/", (req, res)=>{
 //yellow-f// DEFAULT ROUTE END
 
 app.use("/account", accountRouter);
+app.use("/applicant", applicantRouter);
 
 connectToServer(app, port);

@@ -8,6 +8,7 @@ const {
 const AccountCollection = require("../models/accounts.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { ApplicantCollection } = require("../models/profile.models");
 
 const createNewAccount = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ const createNewAccount = async (req, res) => {
    
 
     const user_id = generateUserID();
-    // const password = genearatePassword();
+    //red-f// const password = genearatePassword();
     const password = "Test@1234";
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -42,6 +43,11 @@ const createNewAccount = async (req, res) => {
       password: hashedPassword,
       tokens,
     });
+
+
+    const newApplicant = new ApplicantCollection({personal_info:  {email: email}, user_id: user_id})
+    const addedApplicant = newApplicant.save()
+
 
     const emailOptions = {
       from: process.env.GMAIL_EMAIL,
@@ -133,7 +139,8 @@ const generateOTP = async (req, res) => {
         return res.status(200).send({status: false, message: "Account Not Found"})
     }
 
-    const otp = createOTP()
+    //red-f// const otp = createOTP()
+    const otp = "12345678"
     const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: isExistingAccount.user_id}, {otp: otp}, {new: true})
 
     const emailOptions = {
