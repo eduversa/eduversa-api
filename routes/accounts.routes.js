@@ -7,6 +7,7 @@ const {
   verifyOTP,
   loginToAccount,
   logoutFromOneAccount,
+  getUserID,
 } = require("../controllers/accounts.controllers");
 const { isAuthorizedAccess } = require("../middlewares/auth.middlewares");
 
@@ -21,6 +22,7 @@ accountRouter.route("/").post(createNewAccount).get(getSingleAccount);
 accountRouter.route("/otp").put(generateOTP);
 
 accountRouter.route("/password").put(verifyOTP, changePassword);
+accountRouter.route("/userid").get(verifyOTP, getUserID);
 
 accountRouter
   .route("/auth")
@@ -36,6 +38,7 @@ accountRouter
 //blue-u// forgot password
 //green-u// login
 //green-u// logout from one
+//green-u// get user_id
 //blue-u// logout from all
 
 accountRouter.get("/help", (req, res) => {
@@ -55,12 +58,12 @@ accountRouter.get("/help", (req, res) => {
       },
       {
         method: "PUT",
-        route: "/account/otp?user_id={{user_id}}",
+        route: "/account/otp?query={{user_id or email}}",
         desc: "creates new otp and sends to email",
       },
       {
         method: "PUT",
-        route: "/account/password?user_id={{user_id}}&otp={{otp}}",
+        route: "/account/password?query={{user_id or email}}&otp={{otp}}",
         desc: "change password",
         body: ["password", "confirm_password"],
       },
@@ -75,6 +78,11 @@ accountRouter.get("/help", (req, res) => {
         route: "/account/auth?user_id={{user_id}}",
         desc: "logout from one account",
         header: ["authorization"],
+      },
+      {
+        method: "GET",
+        route: "/account/userid?query={{user_id or email}}&otp={{otp}}",
+        desc: "sends the user id to the registered email",
       },
     ],
   });

@@ -117,18 +117,18 @@ const applicantCourseSchema = {
 };
 // red-f// Student Course Info
 // const CourseInfoCollection = mongoose.model("course-data", courseInfoSchema)
-// const courseInfo = {
-//   course_name: { type: String},
-//   duration: { type: String},
-//   section: { type: String},
-//   stream: { type: String},
-//   total_sem: { type: String},
-//   currrent_sem: { type: String},
-//   current_year: { type: String},
-//   admission_year: { type: String},
-//   passout_year: { type: String},
-//   enrollment_number: { type: String},
-//   registration_number: { type: String},
+const courseInfo = {
+  course_name: { type: String},
+  duration: { type: String},
+  section: { type: String},
+  stream: { type: String},
+  total_sem: { type: String},
+  currrent_sem: { type: String},
+  current_year: { type: String},
+  admission_year: { type: String},
+  passout_year: { type: String},
+  enrollment_number: { type: String},
+  registration_number: { type: String},
 //   grades: [
 //     {
 //       semester: { type: String},
@@ -150,7 +150,7 @@ const applicantCourseSchema = {
 //       sgpa: { type: String},
 //     },
 //   ],
-// };
+};
 
 
 

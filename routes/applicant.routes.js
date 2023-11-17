@@ -23,6 +23,7 @@ applicantRouter
   .get(readAllApplicantsByYear)
   .delete(deleteAllApplicantsByYear);
 
+  
 applicantRouter.get("/help", (req, res) => {
   res.status(200).send({
     status: "This route is working",
@@ -51,7 +52,10 @@ applicantRouter.get("/help", (req, res) => {
               "pan_number",
             ],
           },
-          
+          {
+            type: "academic",
+            body: [],
+          },
         ],
       },
       {
@@ -67,13 +71,13 @@ applicantRouter.get("/help", (req, res) => {
       {
         method: "DELETE",
         route: "/applicant/?user_id={{user_id}}",
-        desc: "delete applicant by user_id (also deletes the account)"
+        desc: "delete applicant by user_id (also deletes the account)",
       },
       {
         method: "DELETE",
         route: "/applicant/year?year={{year}}",
-        desc: "delete all applicants for that year (also deletes the account)"
-      }
+        desc: "delete all applicants for that year (also deletes the account)",
+      },
     ],
   });
 });

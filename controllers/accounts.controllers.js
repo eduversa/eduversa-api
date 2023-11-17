@@ -132,20 +132,30 @@ const forgotPassword = async (req, res) => {
 
 const generateOTP = async (req, res) => {
   try {
-    const {user_id} = req.query;
+    // const {user_id} = req.query;
 
-    const isExistingAccount = await AccountCollection.findOne({user_id})
-    if(!isExistingAccount){
-        return res.status(200).send({status: false, message: "Account Not Found"})
+    // const isExistingAccount = await AccountCollection.findOne({user_id})
+    // if(!isExistingAccount){
+    //     return res.status(200).send({status: false, message: "Account Not Found"})
+    // }
+
+    const {query}=req.query;
+    const accountData = await AccountCollection.findOne({$or: [
+        {email: query},
+        {user_id: query},
+    ]})
+    // console.log(accountData)
+    if(!accountData){
+        return res.status(200).send({status: false, message: "No Account Found"})
     }
 
     //red-f// const otp = createOTP()
     const otp = "12345678"
-    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: isExistingAccount.user_id}, {otp: otp}, {new: true})
+    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: accountData.user_id}, {otp: otp}, {new: true})
 
     const emailOptions = {
         from: process.env.GMAIL_EMAIL,
-        to: isExistingAccount.email,
+        to: accountData.email,
         subject: "OTP for EduVersa Account",
         text: `OTP: ${otp}`
     }
@@ -163,11 +173,16 @@ const generateOTP = async (req, res) => {
 
 const verifyOTP = async (req, res, next) => {
   try {
-    const {user_id, otp} = req.query;
+    const {query, otp} = req.query;
 
-    const isExistingAccount = await AccountCollection.findOne({user_id})
+    // const {query}=req.query;
+    const isExistingAccount = await AccountCollection.findOne({$or: [
+        {email: query},
+        {user_id: query},
+    ]})
+    // console.log(isExistingAccount)
     if(!isExistingAccount){
-        return res.status(200).send({status: false, message: "Account Not Found"})
+        return res.status(200).send({status: false, message: "No Account Found"})
     }
 
     if(isExistingAccount.otp!==otp){
@@ -262,6 +277,40 @@ const logoutFromAllAccounts = async (req, res) => {
   }
 };
 
+
+const getUserID = async (req, res)=>{
+  try {
+    const {isOTPVerified} = req.params
+    if(!isOTPVerified){
+        throw new Error("OTP was not verified")
+    }
+
+
+    const {query} = req.query;
+    const accountData = await AccountCollection.findOne({email:query})
+    // console.log(accountData)
+    if(!accountData){
+        return res.status(200).send({status: false, message: "No Account Found"})
+    }
+
+    const emailOptions = {
+      from: process.env.GMAIL_EMAIL,
+      to: accountData.email,
+      subject: "User ID for your EduVersa Account",
+      text: `User ID: ${accountData.user_id}`
+  }
+  console.log(emailOptions)
+  sendEmail(emailOptions);
+
+
+  res.status(200).send({status: true, message: "User ID has been sent to your email"})
+  } catch (error) {
+    console.log("Error in getUserID");
+    console.log(error);
+    res.send({ status: false, message: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   createNewAccount,
   getSingleAccount,
@@ -272,4 +321,5 @@ module.exports = {
   loginToAccount,
   logoutFromOneAccount,
   logoutFromAllAccounts,
+  getUserID
 };
