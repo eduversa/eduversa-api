@@ -108,11 +108,11 @@ const familyInfoSchema = {
 };
 
 // red-f// Applicant Course Info
-const applicantCourseSchema = {
+const applicantCourseSchema = {  
   course_name: { type: String },
   duration: { type: String },
   stream: { type: String },
-  admission_year: { type: String },
+  admission_year: { type: String, default: new Date().getFullYear() },
 //   enrollment_number: { type: String },
 };
 // red-f// Student Course Info

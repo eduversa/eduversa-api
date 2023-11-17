@@ -207,7 +207,18 @@ const loginToAccount = async (req, res) => {
 
     const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {tokens}, {new: true});
 
-    res.status(200).send({status: true, message: "Logged In Successfully", data: updatedAccount, authToken: token})
+
+    let profileData
+    switch (updatedAccount.type) {
+      case "applicant":
+        profileData = await ApplicantCollection.findOne({user_id:updatedAccount.user_id})
+        break;
+    
+      default:
+        break;
+    }
+
+    res.status(200).send({status: true, message: "Logged In Successfully", data: updatedAccount, authToken: token, profileData: profileData})
 
 
   } catch (error) {
