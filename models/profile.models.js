@@ -117,7 +117,7 @@ const applicantCourseSchema = {
 };
 // red-f// Student Course Info
 // const CourseInfoCollection = mongoose.model("course-data", courseInfoSchema)
-const courseInfo = {
+const studentCourseInfo = {
   course_name: { type: String},
   duration: { type: String},
   section: { type: String},
@@ -172,6 +172,24 @@ const ApplicantCollection = mongoose.model("applicant-data", applicantSchema);
 
 
 
+//orange-f// Student Schema and Model
+const studentSchema = mongoose.Schema(
+  {
+    image: { type: String },
+    user_id: {type: String},
+    personal_info: personalInfoSchema,
+    academic_info: academicInfoSchema,
+    family_info: familyInfoSchema,
+    course_info: studentCourseInfo,
+  },
+  {
+    timestamps: true,
+  }
+);
+const StudentCollection = mongoose.model("student-data", studentSchema);
 
 
-module.exports = { ApplicantCollection };
+
+
+
+module.exports = { ApplicantCollection, StudentCollection };
