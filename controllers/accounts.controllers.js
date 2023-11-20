@@ -300,10 +300,10 @@ const getUserID = async (req, res)=>{
       from: process.env.GMAIL_EMAIL,
       to: accountData.email,
       subject: "User ID for your EduVersa Account",
-      text: `User ID: ${accountData.user_id}`,
+      // text: `User ID: ${accountData.user_id}`,
       html: setUserIDTemplate().replace("{{USER_ID}}", accountData.user_id)
   }
-  console.log(emailOptions)
+  // console.log(emailOptions)
   sendEmail(emailOptions);
 
 
