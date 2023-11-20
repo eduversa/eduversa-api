@@ -9,6 +9,7 @@ const AccountCollection = require("../models/accounts.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { ApplicantCollection } = require("../models/profile.models");
+const { setCredentialsTemplate, setOTPTemplate, setUserIDTemplate } = require("../functions/template.functions");
 
 const createNewAccount = async (req, res) => {
   try {
@@ -53,7 +54,8 @@ const createNewAccount = async (req, res) => {
       from: process.env.GMAIL_EMAIL,
       to: email,
       subject: "EduVersa Account Creation Confirmation",
-      text: `User ID: ${user_id}\nPassword: ${password}`,
+      // text: `User ID: ${user_id}\nPassword: ${password}`,
+      html: setCredentialsTemplate().replace("{{USER_ID}}", user_id).replace("{{PASSWORD}}", password)
     };
     sendEmail(emailOptions);
     const addedAccount = await newAccount.save();
@@ -157,7 +159,8 @@ const generateOTP = async (req, res) => {
         from: process.env.GMAIL_EMAIL,
         to: accountData.email,
         subject: "OTP for EduVersa Account",
-        text: `OTP: ${otp}`
+        // text: `OTP: ${otp}`,
+        html: setOTPTemplate().replace("{{DATE}}", new Date().toDateString()).replace("{{OTP}}", otp)
     }
     sendEmail(emailOptions);
 
@@ -297,7 +300,8 @@ const getUserID = async (req, res)=>{
       from: process.env.GMAIL_EMAIL,
       to: accountData.email,
       subject: "User ID for your EduVersa Account",
-      text: `User ID: ${accountData.user_id}`
+      text: `User ID: ${accountData.user_id}`,
+      html: setUserIDTemplate().replace("{{USER_ID}}", accountData.user_id)
   }
   console.log(emailOptions)
   sendEmail(emailOptions);
