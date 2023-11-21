@@ -9,7 +9,8 @@ var profileImageUploader = multer({
     filename: function (req, file, cb) {
       //   cb(null, file.originalname)
       //   console.log(req.query);
-      cb(null, req.query.email + "_profile." + file.mimetype.split("/")[1]);
+      cb(null, req.query.email + "_profile");
+      // cb(null, req.query.email + "_profile." + file.mimetype.split("/")[1]);
     },
   }),
 });

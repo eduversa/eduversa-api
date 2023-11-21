@@ -1,4 +1,5 @@
 const Applicant = require("../classes/applicant.class");
+const cloudinary = require("../config/cloudinary.config");
 const AccountCollection = require("../models/accounts.model");
 const { ApplicantCollection } = require("../models/profile.models");
 
@@ -60,11 +61,38 @@ const updateApplicant = async (req, res) => {
         break;
       case "files":
         console.log(req.file)
-        updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-          { user_id },
-          { course_info: applicantData.course_info },
-          { new: true }
-        );
+
+          const filePath = __dirname + "/../" + req.file.path
+          console.log(filePath)
+
+
+
+
+
+        cloudinary.uploader.upload(filePath, { public_id: req.file.filename }, async (error, result) => {
+          if (error) {
+            console.error('Error uploading file to Cloudinary:', error);
+            return res.status(500).json({ error: 'Failed to upload file' });
+          }
+      
+          // `result` contains information about the uploaded file
+          console.log('File uploaded to Cloudinary');
+      
+          // Optionally, you can remove the local file after uploading
+          // fs.unlinkSync(filePath);
+      
+          // return res.status(200).json({ message: 'File uploaded to Cloudinary successfully' });
+          updatedApplicant = await ApplicantCollection.findOneAndUpdate(
+            { user_id },
+            { image:  result.url},
+            { new: true }
+          );
+        });
+
+
+
+
+
         break;
 
       default:
