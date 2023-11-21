@@ -58,6 +58,14 @@ const updateApplicant = async (req, res) => {
           { new: true }
         );
         break;
+      case "files":
+        console.log(req.file)
+        updatedApplicant = await ApplicantCollection.findOneAndUpdate(
+          { user_id },
+          { course_info: applicantData.course_info },
+          { new: true }
+        );
+        break;
 
       default:
         break;

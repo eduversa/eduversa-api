@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 
 const accountSchema = mongoose.Schema(
   {
+    security_token: {
+      type: String,
+    },
     first_name: {
       type: String,
     },

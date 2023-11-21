@@ -6,6 +6,7 @@ const {
   deleteApplicantByUserID,
   deleteAllApplicantsByYear,
 } = require("../controllers/profile.controllers");
+const { profileImageUploader } = require("../config/multer.config");
 
 const applicantRouter = express.Router();
 
@@ -15,7 +16,7 @@ applicantRouter.get("/test", (req, res) => {
 
 applicantRouter
   .route("/")
-  .put(updateApplicant)
+  .put(profileImageUploader.single("image"), updateApplicant)
   .get(readApplicantByUserID)
   .delete(deleteApplicantByUserID);
 applicantRouter
