@@ -59,7 +59,7 @@ const getPermissionByName = async (req, res) => {
 
 const getAllPermissions = async (req, res) => {
   try {
-    const permissionArray = await PermissionsCollection.findOne({});
+    const permissionArray = await PermissionsCollection.find({});
     if (!permissionArray || permissionArray.length < 1) {
       return res
         .status(200)

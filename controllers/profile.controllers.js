@@ -14,7 +14,7 @@ const updateApplicant = async (req, res) => {
         .send({ status: false, message: "No applicant found" });
     }
 
-    console.log(req.body)
+    // console.log(req.body)
     const applicantData = new Applicant(req.body, type);
     // console.log(applicantData)
     let updatedApplicant = false;

@@ -90,7 +90,7 @@ class Applicant {
 
       case "family":
         const { father, mother, guardian } = data;
-        console.log(data);
+        // console.log(data);
 
         let family_info = {
           father: {},

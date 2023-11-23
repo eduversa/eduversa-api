@@ -7,7 +7,10 @@ const {
   deleteAllApplicantsByYear,
 } = require("../controllers/profile.controllers");
 const { profileImageUploader } = require("../config/multer.config");
-const { isAuthorizedAccess, checkPermission } = require("../middlewares/auth.middlewares");
+const {
+  isAuthorizedAccess,
+  checkPermission,
+} = require("../middlewares/auth.middlewares");
 
 const applicantRouter = express.Router();
 
@@ -17,15 +20,35 @@ applicantRouter.get("/test", (req, res) => {
 
 applicantRouter
   .route("/")
-  .put(profileImageUploader.single("image"), updateApplicant)
-  .get(readApplicantByUserID)
-  .delete(isAuthorizedAccess, checkPermission("delete applicant by user id"), deleteApplicantByUserID);
+  .put(
+    isAuthorizedAccess,
+    checkPermission("applicant profile update", 1),
+    profileImageUploader.single("image"),
+    updateApplicant
+  )
+  .get(
+    isAuthorizedAccess,
+    checkPermission("single applicant profile read", 1),
+    readApplicantByUserID
+  )
+  .delete(
+    isAuthorizedAccess,
+    checkPermission("single applicant profile delete"),
+    deleteApplicantByUserID
+  );
 applicantRouter
   .route("/year")
-  .get(readAllApplicantsByYear)
-  .delete(deleteAllApplicantsByYear);
+  .get(
+    isAuthorizedAccess,
+    checkPermission("multiple applicant profiles read", 1),
+    readAllApplicantsByYear
+  )
+  .delete(
+    isAuthorizedAccess,
+    checkPermission("multiple applicant profiles delete", 1),
+    deleteAllApplicantsByYear
+  );
 
-  
 applicantRouter.get("/help", (req, res) => {
   res.status(200).send({
     status: "This route is working",
@@ -33,7 +56,7 @@ applicantRouter.get("/help", (req, res) => {
       {
         method: "PUT",
         route:
-          "/applicant/?user_id={{user_id}}&type={{(Any One)->[personal, academic, family, course, files]}}",
+          "/applicant/?user_id={{user_id}}&type={{(Any One)->[personal, academic, family, course, files]}}&email={{email}}",
         desc: "updates the applicant data based on the section of the profile form",
         NOTE: "Give an object based on the type of profile data, for image-> {image: <imageData>}",
         info: [
