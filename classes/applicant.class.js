@@ -204,37 +204,40 @@ class Applicant {
 
       case "academic":
         const { admission, secondary, higher_secondary } = data;
+        let academic_info = {
+          admission: {}, secondary: {}, higher_secondary: {}
+        }
 
         if (admission) {
           if (admission.exam_name) {
-            this.academic_info.admission.exam_name = admission.exam_name;
+            academic_info.admission.exam_name = admission.exam_name;
           }
           if (admission.year_of_exam) {
-            this.academic_info.admission.year_of_exam = admission.year_of_exam;
+            academic_info.admission.year_of_exam = admission.year_of_exam;
           }
           if (admission.roll_number) {
-            this.academic_info.admission.roll_number = admission.roll_number;
+            academic_info.admission.roll_number = admission.roll_number;
           }
           if (admission.rank) {
-            this.academic_info.admission.rank = admission.rank;
+            academic_info.admission.rank = admission.rank;
           }
         }
 
         if (secondary) {
           if (secondary.exam_name) {
-            this.academic_info.secondary.exam_name = secondary.exam_name;
+            academic_info.secondary.exam_name = secondary.exam_name;
           }
           if (secondary.year_of_exam) {
-            this.academic_info.secondary.year_of_exam = secondary.year_of_exam;
+            academic_info.secondary.year_of_exam = secondary.year_of_exam;
           }
           if (secondary.board) {
-            this.academic_info.secondary.board = secondary.board;
+            academic_info.secondary.board = secondary.board;
           }
           if (secondary.aggregate) {
-            this.academic_info.secondary.aggregate = secondary.aggregate;
+            academic_info.secondary.aggregate = secondary.aggregate;
           }
           if (secondary.school_name) {
-            this.academic_info.secondary.school_name = secondary.school_name;
+            academic_info.secondary.school_name = secondary.school_name;
           }
           if (secondary.subjects) {
             let subjectsArray = subjects.split(",");
@@ -246,29 +249,29 @@ class Applicant {
               marks[subject[0]] = subject[1];
             });
 
-            this.academic_info.secondary.subjects = subjects;
-            this.academic_info.secondary.marks = marks;
+            academic_info.secondary.subjects = subjects;
+            academic_info.secondary.marks = marks;
           }
         }
 
         if (higher_secondary) {
           if (higher_secondary.exam_name) {
-            this.academic_info.higher_secondary.exam_name =
+            academic_info.higher_secondary.exam_name =
               higher_secondary.exam_name;
           }
           if (higher_secondary.year_of_exam) {
-            this.academic_info.higher_secondary.year_of_exam =
+            academic_info.higher_secondary.year_of_exam =
               higher_secondary.year_of_exam;
           }
           if (higher_secondary.board) {
-            this.academic_info.higher_secondary.board = higher_secondary.board;
+            academic_info.higher_secondary.board = higher_secondary.board;
           }
           if (higher_secondary.aggregate) {
-            this.academic_info.higher_secondary.aggregate =
+            academic_info.higher_secondary.aggregate =
               higher_secondary.aggregate;
           }
           if (higher_secondary.school_name) {
-            this.academic_info.higher_secondary.school_name =
+            academic_info.higher_secondary.school_name =
               higher_secondary.school_name;
           }
           if (higher_secondary.subjects) {
@@ -281,26 +284,30 @@ class Applicant {
               marks[subject[0]] = subject[1];
             });
 
-            this.academic_info.higher_secondary.subjects = subjects;
-            this.academic_info.higher_secondary.marks = marks;
+            academic_info.higher_secondary.subjects = subjects;
+            academic_info.higher_secondary.marks = marks;
           }
         }
+
+        this.academic_info = academic_info
         break;
 
       case "course":
         const { course_name, duration, stream, admission_year } = data;
+        let course_info = {}
         if (course_name) {
-          this.course_info.course_name = course_name;
+          course_info.course_name = course_name;
         }
         if (duration) {
-          this.course_info.duration = duration;
+          course_info.duration = duration;
         }
         if (stream) {
-          this.course_info.stream = stream;
+          course_info.stream = stream;
         }
         if (admission_year) {
-          this.course_info.admission_year = admission_year;
+          course_info.admission_year = admission_year;
         }
+        this.course_info = course_info
         break;
 
       default:
