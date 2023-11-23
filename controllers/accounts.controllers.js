@@ -252,7 +252,7 @@ const logoutFromOneAccount = async (req, res) => {
     const {user} = req
     const token = req.headers.authorization
 
-    const accountData = await AccountCollection.findOne({user_id})
+    const accountData = await AccountCollection.findOne({user_id: user.user_id})
     if(!accountData){
         return res.status(200).send({status: false, message: "No account found"})
     }
