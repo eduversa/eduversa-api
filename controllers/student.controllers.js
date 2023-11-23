@@ -52,7 +52,8 @@ const approveStudentAdmission = async (req, res) => {
 
     const updatedAccount = await AccountCollection.findOneAndUpdate(
       { user_id },
-      { user_id: addedStudent.course_info.enrollment_number, type: "student" }
+      { user_id: addedStudent.course_info.enrollment_number, type: "student", accessLevel:2, tokens:[] },
+      {new: true}
     );
 
     const emailOptions = {

@@ -5,6 +5,11 @@ const accountSchema = mongoose.Schema(
     security_token: {
       type: String,
     },
+    permissions: [
+      {
+        type: String,
+      },
+    ],
     first_name: {
       type: String,
     },
@@ -21,7 +26,7 @@ const accountSchema = mongoose.Schema(
     },
     user_id: {
       type: String,
-      unique: true
+      unique: true,
     },
     phone: {
       type: Number,
@@ -34,7 +39,11 @@ const accountSchema = mongoose.Schema(
     },
     type: {
       type: String,
-      default: "applicant"
+      default: "applicant",
+    },
+    accessLevel: {
+      type: Number,
+      default: 1,
     },
     tokens: [
       {

@@ -169,15 +169,23 @@ const deleteApplicantByUserID = async (req, res) => {
     const { user_id } = req.query;
 
     const applicantData = await ApplicantCollection.findOne({ user_id });
+    // console.log("1")
 
     if (!applicantData) {
+      // console.log("1a")
       return res
         .status(200)
         .send({ status: false, message: "No applicant found" });
     }
+    // console.log("2")
+
 
     const deletedApplicant = await ApplicantCollection.findOneAndDelete({ user_id });
+    // console.log("3")
+    
     const deletedAccount = await AccountCollection.findOneAndDelete({ user_id });
+    // console.log("4")
+
 
     res.status(200).send({
       status: true,

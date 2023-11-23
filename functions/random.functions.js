@@ -36,10 +36,14 @@ const createOTP = ()=>{
     return `${randomStringGenerator(8)}`
 }
 
+const generatePermissionCode = ()=>{
+    return `${randomStringGenerator(20)}`
+}
+
 
 // const 
 
 
 // console.log(randomStringGenerator(100, special = true))
 
-module.exports = {randomNumberGenerator, generateUserID, genearatePassword, createOTP}
+module.exports = {randomNumberGenerator, generateUserID, genearatePassword, createOTP, generatePermissionCode}

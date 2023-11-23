@@ -249,7 +249,7 @@ const loginToAccount = async (req, res) => {
 
 const logoutFromOneAccount = async (req, res) => {
   try {
-    const {user_id} = req.headers
+    const {user} = req
     const token = req.headers.authorization
 
     const accountData = await AccountCollection.findOne({user_id})
@@ -262,7 +262,7 @@ const logoutFromOneAccount = async (req, res) => {
     tokens = tokens.filter(element=>element.token!==token)
 
 
-    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: user_id}, {tokens}, {new: true})
+    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: user.user_id}, {tokens}, {new: true})
 
     res.status(200).send({status: true, message: "Logged Out Successfully"})
   } catch (error) {

@@ -7,6 +7,7 @@ const {
   deleteAllApplicantsByYear,
 } = require("../controllers/profile.controllers");
 const { profileImageUploader } = require("../config/multer.config");
+const { isAuthorizedAccess, checkPermission } = require("../middlewares/auth.middlewares");
 
 const applicantRouter = express.Router();
 
@@ -18,7 +19,7 @@ applicantRouter
   .route("/")
   .put(profileImageUploader.single("image"), updateApplicant)
   .get(readApplicantByUserID)
-  .delete(deleteApplicantByUserID);
+  .delete(isAuthorizedAccess, checkPermission("delete applicant by user id"), deleteApplicantByUserID);
 applicantRouter
   .route("/year")
   .get(readAllApplicantsByYear)
