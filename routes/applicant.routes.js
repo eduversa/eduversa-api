@@ -33,7 +33,7 @@ applicantRouter
   )
   .delete(
     isAuthorizedAccess,
-    checkPermission("single applicant profile delete"),
+    checkPermission("single applicant profile delete", 4),
     deleteApplicantByUserID
   );
 applicantRouter
@@ -45,7 +45,7 @@ applicantRouter
   )
   .delete(
     isAuthorizedAccess,
-    checkPermission("multiple applicant profiles delete", 1),
+    checkPermission("multiple applicant profiles delete", 4),
     deleteAllApplicantsByYear
   );
 

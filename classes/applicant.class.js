@@ -205,8 +205,10 @@ class Applicant {
       case "academic":
         const { admission, secondary, higher_secondary } = data;
         let academic_info = {
-          admission: {}, secondary: {}, higher_secondary: {}
-        }
+          admission: {},
+          secondary: {},
+          higher_secondary: {},
+        };
 
         if (admission) {
           if (admission.exam_name) {
@@ -240,7 +242,7 @@ class Applicant {
             academic_info.secondary.school_name = secondary.school_name;
           }
           if (secondary.subjects) {
-            let subjectsArray = subjects.split(",");
+            let subjectsArray = secondary.subjects.split(",");
             let subjects = "",
               marks = {};
             subjectsArray.forEach((subject) => {
@@ -275,7 +277,7 @@ class Applicant {
               higher_secondary.school_name;
           }
           if (higher_secondary.subjects) {
-            let subjectsArray = subjects.split(",");
+            let subjectsArray = higher_secondary.subjects.split(",");
             let subjects = "",
               marks = {};
             subjectsArray.forEach((subject) => {
@@ -289,12 +291,12 @@ class Applicant {
           }
         }
 
-        this.academic_info = academic_info
+        this.academic_info = academic_info;
         break;
 
       case "course":
         const { course_name, duration, stream, admission_year } = data;
-        let course_info = {}
+        let course_info = {};
         if (course_name) {
           course_info.course_name = course_name;
         }
@@ -307,7 +309,7 @@ class Applicant {
         if (admission_year) {
           course_info.admission_year = admission_year;
         }
-        this.course_info = course_info
+        this.course_info = course_info;
         break;
 
       default:

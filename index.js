@@ -35,18 +35,24 @@ app.use(
 );
 
 //yellow-f// DEFAULT ROUTE START
-app.get("/connection", async (req, res)=>{
-    res.send("API is working")
-})
-app.delete("/connection/reset", async (req, res)=>{
-    clearAllCollections()
-})
-app.get("/", (req, res)=>{
-    res.send({
-        status: "working",
-        help: ["/account", "/applicant", "/college", "/student"]
-    })
-})
+app.get("/connection", async (req, res) => {
+  res.send("API is working");
+});
+app.delete("/connection/reset", async (req, res) => {
+  clearAllCollections();
+});
+app.get("/", (req, res) => {
+  res.send({
+    status: "working",
+    help: [
+      "/account/help",
+      "/applicant/help",
+      "/college/help",
+      "/student/help",
+      "/permission/help",
+    ],
+  });
+});
 //yellow-f// DEFAULT ROUTE END
 
 app.use("/account", accountRouter);

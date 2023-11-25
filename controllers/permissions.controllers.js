@@ -96,7 +96,9 @@ const addNewPermissionToUser = async (req, res) => {
     }
 
     const permissionArray = accountData.permissions;
-    permissionArray.push(permissionData.code);
+    if (!permissionArray.includes(permissionData.code)) {
+      permissionArray.push(permissionData.code);
+    }
     const updatedAccount = await AccountCollection.findOneAndUpdate(
       { user_id },
       { permissions: permissionArray },
@@ -110,6 +112,7 @@ const addNewPermissionToUser = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in addNewPermissionToUser");
+    console.log(error);
     res.send({ status: false, message: error });
   }
 };
@@ -132,10 +135,12 @@ const removePermissionFromUser = async (req, res) => {
         .send({ status: false, message: "No Permission Found" });
     }
 
-    const permissionArray = accountData.permissions;
-    permissionArray = permissionArray.filter(
-      (permission) => permission.code !== permission_code
-    );
+    let permissionArray = accountData.permissions;
+    // console.log(permissionArray, permission_code);
+    permissionArray = permissionArray.filter((permission) => {
+      return permission !== permission_code;
+    });
+    // console.log(permissionArray);
     const updatedAccount = await AccountCollection.findOneAndUpdate(
       { user_id },
       { permissions: permissionArray },
@@ -149,6 +154,7 @@ const removePermissionFromUser = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in removePermissionFromUser");
+    console.log(error);
     res.send({ status: false, message: error });
   }
 };
