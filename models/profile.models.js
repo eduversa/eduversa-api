@@ -9,7 +9,6 @@ const mongoose = require("mongoose");
 //   }
 // );
 
-
 // red-f// Personal Info
 const personalInfoSchema = {
   first_name: { type: String },
@@ -54,6 +53,7 @@ const academicInfoSchema = {
     board: { type: String },
     aggregate: { type: String },
     school_name: { type: String },
+    subjectString: { type: String },
     subjects: String,
     marks: Object,
   },
@@ -63,6 +63,7 @@ const academicInfoSchema = {
     board: { type: String },
     aggregate: { type: String },
     school_name: { type: String },
+    subjectString: { type: String },
     subjects: String,
     marks: Object,
   },
@@ -108,57 +109,55 @@ const familyInfoSchema = {
 };
 
 // red-f// Applicant Course Info
-const applicantCourseSchema = {  
+const applicantCourseSchema = {
   course_name: { type: String },
   duration: { type: String },
   stream: { type: String },
   admission_year: { type: String, default: new Date().getFullYear() },
-//   enrollment_number: { type: String },
+  //   enrollment_number: { type: String },
 };
 // red-f// Student Course Info
 // const CourseInfoCollection = mongoose.model("course-data", courseInfoSchema)
 const studentCourseInfo = {
-  course_name: { type: String},
-  duration: { type: String},
-  section: { type: String},
-  stream: { type: String},
-  total_sem: { type: String},
-  currrent_sem: { type: String},
-  current_year: { type: String},
-  admission_year: { type: String},
-  passout_year: { type: String},
-  enrollment_number: { type: String},
-  registration_number: { type: String},
-//   grades: [
-//     {
-//       semester: { type: String},
-//       marks: [
-//         {
-//           subject: { type: String},
-//           subject_code: { type: String},
-//           letter_grading: { type: String},
-//           points: { type: String},
-//           credits: { type: String},
-//           credit_points: { type: String},
-//           total_classes: { type: String},
-//           attendend_classes: { type: String},
-//           attendance: { type: String},
-//         },
-//       ],
-//       total_credits: { type: String},
-//       total_credit_points: { type: String},
-//       sgpa: { type: String},
-//     },
-//   ],
+  course_name: { type: String },
+  duration: { type: String },
+  section: { type: String },
+  stream: { type: String },
+  total_sem: { type: String },
+  currrent_sem: { type: String },
+  current_year: { type: String },
+  admission_year: { type: String },
+  passout_year: { type: String },
+  enrollment_number: { type: String },
+  registration_number: { type: String },
+  //   grades: [
+  //     {
+  //       semester: { type: String},
+  //       marks: [
+  //         {
+  //           subject: { type: String},
+  //           subject_code: { type: String},
+  //           letter_grading: { type: String},
+  //           points: { type: String},
+  //           credits: { type: String},
+  //           credit_points: { type: String},
+  //           total_classes: { type: String},
+  //           attendend_classes: { type: String},
+  //           attendance: { type: String},
+  //         },
+  //       ],
+  //       total_credits: { type: String},
+  //       total_credit_points: { type: String},
+  //       sgpa: { type: String},
+  //     },
+  //   ],
 };
-
-
 
 //orange-f// Applicant Schema and Model
 const applicantSchema = mongoose.Schema(
   {
     image: { type: String },
-    user_id: {type: String},
+    user_id: { type: String },
     personal_info: personalInfoSchema,
     academic_info: academicInfoSchema,
     family_info: familyInfoSchema,
@@ -170,13 +169,11 @@ const applicantSchema = mongoose.Schema(
 );
 const ApplicantCollection = mongoose.model("applicant-data", applicantSchema);
 
-
-
 //orange-f// Student Schema and Model
 const studentSchema = mongoose.Schema(
   {
     image: { type: String },
-    user_id: {type: String},
+    user_id: { type: String },
     personal_info: personalInfoSchema,
     academic_info: academicInfoSchema,
     family_info: familyInfoSchema,
@@ -187,9 +184,5 @@ const studentSchema = mongoose.Schema(
   }
 );
 const StudentCollection = mongoose.model("student-data", studentSchema);
-
-
-
-
 
 module.exports = { ApplicantCollection, StudentCollection };

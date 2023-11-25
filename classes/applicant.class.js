@@ -1,5 +1,33 @@
 const { formatName } = require("../functions/account.functions");
 
+const formatMarks = (subjectString) => {
+  let subjectsArray = subjectString.split(",");
+  let subjects = "",
+    marks = {};
+  subjectsArray.forEach((subject) => {
+    subject = subject.split("-");
+    let score = subject[1];
+    subject = subject[0];
+
+    subject = subject
+      .split(" ")
+      .filter((item) => item !== "")
+      .join(" ");
+    score = parseInt(
+      score
+        .split(" ")
+        .filter((item) => item !== "")
+        .join("")
+    );
+    subjects = subjects + subject;
+    marks[subject] = score;
+
+    return { subjects, marks };
+  });
+
+  academic_info.secondary.subjects = subjects;
+  academic_info.secondary.marks = marks;
+};
 class Applicant {
   constructor(data, type) {
     // if(!Object.keys(personal_info).length){
@@ -242,15 +270,17 @@ class Applicant {
             academic_info.secondary.school_name = secondary.school_name;
           }
           if (secondary.subjects) {
-            let subjectsArray = secondary.subjects.split(",");
-            let subjects = "",
-              marks = {};
-            subjectsArray.forEach((subject) => {
-              subject = subject.split("-");
-              subjects = subjects + subject[0];
-              marks[subject[0]] = subject[1];
-            });
+            // let subjectsArray = secondary.subjects.split(",");
+            // let subjects = "",
+            //   marks = {};
+            // subjectsArray.forEach((subject) => {
+            //   subject = subject.split("-");
+            //   subjects = subjects + subject[0];
+            //   marks[subject[0]] = subject[1];
+            // });
 
+            const { subjects, marks } = formatMarks(secondary.subjects);
+            academic_info.secondary.subjectString = secondary.subjects;
             academic_info.secondary.subjects = subjects;
             academic_info.secondary.marks = marks;
           }
@@ -277,15 +307,18 @@ class Applicant {
               higher_secondary.school_name;
           }
           if (higher_secondary.subjects) {
-            let subjectsArray = higher_secondary.subjects.split(",");
-            let subjects = "",
-              marks = {};
-            subjectsArray.forEach((subject) => {
-              subject = subject.split("-");
-              subjects = subjects + subject[0];
-              marks[subject[0]] = subject[1];
-            });
+            // let subjectsArray = higher_secondary.subjects.split(",");
+            // let subjects = "",
+            //   marks = {};
+            // subjectsArray.forEach((subject) => {
+            //   subject = subject.split("-");
+            //   subjects = subjects + subject[0];
+            //   marks[subject[0]] = subject[1];
+            // });
 
+            const { subjects, marks } = formatMarks(higher_secondary.subjects);
+            academic_info.higher_secondary.subjectString =
+              higher_secondary.subjects;
             academic_info.higher_secondary.subjects = subjects;
             academic_info.higher_secondary.marks = marks;
           }
