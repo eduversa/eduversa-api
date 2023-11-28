@@ -35,9 +35,9 @@ const updateApplicant = async (req, res) => {
             last_name: applicantData.personal_info.last_name,
             phone: applicantData.personal_info.contact,
           },
-          {new: true}
+          { new: true }
         );
-        console.log(updatedAccount)
+        console.log(updatedAccount);
         break;
       case "academic":
         updatedApplicant = await ApplicantCollection.findOneAndUpdate(
@@ -61,38 +61,34 @@ const updateApplicant = async (req, res) => {
         );
         break;
       case "files":
-        console.log(req.file)
+        console.log(req.file);
 
-          const filePath = __dirname + "/../" + req.file.path
-          console.log(filePath)
+        const filePath = __dirname + "/../" + req.file.path;
+        console.log(filePath);
 
+        cloudinary.uploader.upload(
+          filePath,
+          { public_id: req.file.filename },
+          async (error, result) => {
+            if (error) {
+              console.error("Error uploading file to Cloudinary:", error);
+              return res.status(500).json({ error: "Failed to upload file" });
+            }
 
+            // `result` contains information about the uploaded file
+            console.log("File uploaded to Cloudinary");
 
+            // Optionally, you can remove the local file after uploading
+            // fs.unlinkSync(filePath);
 
-
-        cloudinary.uploader.upload(filePath, { public_id: req.file.filename }, async (error, result) => {
-          if (error) {
-            console.error('Error uploading file to Cloudinary:', error);
-            return res.status(500).json({ error: 'Failed to upload file' });
+            // return res.status(200).json({ message: 'File uploaded to Cloudinary successfully' });
+            updatedApplicant = await ApplicantCollection.findOneAndUpdate(
+              { user_id },
+              { image: result.url },
+              { new: true }
+            );
           }
-      
-          // `result` contains information about the uploaded file
-          console.log('File uploaded to Cloudinary');
-      
-          // Optionally, you can remove the local file after uploading
-          // fs.unlinkSync(filePath);
-      
-          // return res.status(200).json({ message: 'File uploaded to Cloudinary successfully' });
-          updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-            { user_id },
-            { image:  result.url},
-            { new: true }
-          );
-        });
-
-
-
-
+        );
 
         break;
 
@@ -110,7 +106,7 @@ const updateApplicant = async (req, res) => {
   } catch (error) {
     console.log("Error in updateApplicant");
     console.log(error);
-    res.send({ status: false, message: error });
+    res.send({ status: false, message: "catch error", error });
   }
 };
 
@@ -134,7 +130,7 @@ const readApplicantByUserID = async (req, res) => {
   } catch (error) {
     console.log("Error in readApplicantByUserID");
     console.log(error);
-    res.send({ status: false, message: error });
+    res.send({ status: false, message: "catch error", error });
   }
 };
 
@@ -180,13 +176,15 @@ const deleteApplicantByUserID = async (req, res) => {
     }
     // console.log("2")
 
-
-    const deletedApplicant = await ApplicantCollection.findOneAndDelete({ user_id });
+    const deletedApplicant = await ApplicantCollection.findOneAndDelete({
+      user_id,
+    });
     // console.log("3")
-    
-    const deletedAccount = await AccountCollection.findOneAndDelete({ user_id });
-    // console.log("4")
 
+    const deletedAccount = await AccountCollection.findOneAndDelete({
+      user_id,
+    });
+    // console.log("4")
 
     res.status(200).send({
       status: true,
@@ -202,7 +200,6 @@ const deleteApplicantByUserID = async (req, res) => {
 
 const deleteAllApplicantsByYear = async (req, res) => {
   try {
-
     // const year = req.query.year;
     const year = new Date().getFullYear();
 
@@ -216,20 +213,24 @@ const deleteAllApplicantsByYear = async (req, res) => {
         .send({ status: false, message: "No Applicant Found", data: [] });
     }
 
-    const deletedArray = await Promise.all(applicantArray.map(async applicant=>{
-        const deletedApplicant = await ApplicantCollection.findOneAndDelete({user_id: applicant.user_id})
-        const deletedAccount = await AccountCollection.findOneAndDelete({user_id: applicant.user_id})
+    const deletedArray = await Promise.all(
+      applicantArray.map(async (applicant) => {
+        const deletedApplicant = await ApplicantCollection.findOneAndDelete({
+          user_id: applicant.user_id,
+        });
+        const deletedAccount = await AccountCollection.findOneAndDelete({
+          user_id: applicant.user_id,
+        });
 
-        return deletedApplicant
-    }))
+        return deletedApplicant;
+      })
+    );
 
     res.status(200).send({
       status: true,
       message: deletedArray.length + " Applicant(s) Found",
       data: deletedArray,
     });
-
-    
   } catch (error) {
     console.log("Error in deleteAllApplicantsByYear");
     console.log(error);
