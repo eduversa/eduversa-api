@@ -9,7 +9,11 @@ const AccountCollection = require("../models/accounts.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { ApplicantCollection } = require("../models/profile.models");
-const { setCredentialsTemplate, setOTPTemplate, setUserIDTemplate } = require("../functions/template.functions");
+const {
+  setCredentialsTemplate,
+  setOTPTemplate,
+  setUserIDTemplate,
+} = require("../functions/template.functions");
 
 const createNewAccount = async (req, res) => {
   try {
@@ -28,8 +32,6 @@ const createNewAccount = async (req, res) => {
     //     return res.status(200).send({status: false, message: "Invalid Name"})
     // }
 
-   
-
     const user_id = generateUserID();
     //red-f// const password = genearatePassword();
     const password = "Test@1234";
@@ -46,17 +48,20 @@ const createNewAccount = async (req, res) => {
       tokens,
     });
 
-
-    const newApplicant = new ApplicantCollection({personal_info:  {email: email}, user_id: user_id})
-    const addedApplicant = newApplicant.save()
-
+    const newApplicant = new ApplicantCollection({
+      personal_info: { email: email },
+      user_id: user_id,
+    });
+    const addedApplicant = newApplicant.save();
 
     const emailOptions = {
       from: process.env.GMAIL_EMAIL,
       to: email,
       subject: "EduVersa Account Creation Confirmation",
       // text: `User ID: ${user_id}\nPassword: ${password}`,
-      html: setCredentialsTemplate().replace("{{USER_ID}}", user_id).replace("{{PASSWORD}}", password)
+      html: setCredentialsTemplate()
+        .replace("{{USER_ID}}", user_id)
+        .replace("{{PASSWORD}}", password),
     };
     sendEmail(emailOptions);
     const addedAccount = await newAccount.save();
@@ -74,18 +79,116 @@ const createNewAccount = async (req, res) => {
   }
 };
 
+const createNewAccountUsingSocialMedia = async (req, res) => {
+  try {
+    const { platform } = req.query;
+    let personal_info, image;
+
+    // const {name, email, phone, password, confirm_password} = req.body;
+
+    switch (platform) {
+      case "google":
+        email = req.body.user.email;
+        const nameObject = formatName(req.body.user.name);
+        personal_info = {
+          first_name: nameObject.first_name,
+          last_name: nameObject.last_name,
+          email: email,
+        };
+        if (nameObject.middle_name) {
+          personal_info.middle_name = nameObject.middle_name;
+        }
+        image = req.body.user.image;
+        break;
+
+      case "github":
+        email = req.body.user.email;
+
+        personal_info = {
+          email: email,
+        };
+        image = req.body.user.image;
+        break;
+
+      default:
+        break;
+    }
+
+    const existingAccount = await AccountCollection.findOne({ email });
+    if (existingAccount) {
+      return res
+        .status(200)
+        .send({ status: false, message: "Account already exists" });
+    }
+
+    // const nameObject = formatName(name);
+    // if(!nameObject){
+    //     return res.status(200).send({status: false, message: "Invalid Name"})
+    // }
+
+    const user_id = generateUserID();
+    //red-f// const password = genearatePassword();
+    const password = "Test@1234";
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // const securityToken = jwt.sign({ email, user_id }, process.env.SECURITY_KEY);
+    const token = jwt.sign({ email, user_id }, process.env.SECRET_KEY);
+    const tokens = [{ token }];
+
+    const newAccount = new AccountCollection({
+      email,
+      user_id,
+      password: hashedPassword,
+      tokens,
+    });
+
+    const newApplicant = new ApplicantCollection({
+      personal_info: personal_info,
+      image: image,
+      user_id: user_id,
+    });
+    const addedApplicant = newApplicant.save();
+
+    const emailOptions = {
+      from: process.env.GMAIL_EMAIL,
+      to: email,
+      subject: "EduVersa Account Creation Confirmation",
+      // text: `User ID: ${user_id}\nPassword: ${password}`,
+      html: setCredentialsTemplate()
+        .replace("{{USER_ID}}", user_id)
+        .replace("{{PASSWORD}}", password),
+    };
+    sendEmail(emailOptions);
+    const addedAccount = await newAccount.save();
+
+    res.status(200).send({
+      status: true,
+      message: "Account Creation Success",
+      data: addedAccount,
+    });
+    // console.log(newAccount);
+  } catch (error) {
+    console.log("Error in createNewAccountUsingSocialMedia");
+    console.log(error);
+    res.send({ status: false, message: "Internal Server Error", error: error });
+  }
+};
+
 const getSingleAccount = async (req, res) => {
   try {
-    const {query}=req.query;
-    const accountData = await AccountCollection.findOne({$or: [
-        {email: query},
-        {user_id: query},
-    ]})
-    console.log(accountData)
-    if(!accountData){
-        return res.status(200).send({status: false, message: "No Account Found"})
+    const { query } = req.query;
+    const accountData = await AccountCollection.findOne({
+      $or: [{ email: query }, { user_id: query }],
+    });
+    console.log(accountData);
+    if (!accountData) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Account Found" });
     }
-    res.status(200).send({status: true, message: "Account Found", data: accountData})
+    res
+      .status(200)
+      .send({ status: true, message: "Account Found", data: accountData });
   } catch (error) {
     console.log("Error in getSingleAccount");
     console.log(error);
@@ -93,27 +196,32 @@ const getSingleAccount = async (req, res) => {
   }
 };
 
-
 const changePassword = async (req, res) => {
   try {
-    const {isOTPVerified} = req.params
-    if(!isOTPVerified){
-        throw new Error("OTP was not verified")
+    const { isOTPVerified } = req.params;
+    if (!isOTPVerified) {
+      throw new Error("OTP was not verified");
     }
 
-    const {password, confirm_password} = req.body;
-    const {user_id} = req.query;
+    const { password, confirm_password } = req.body;
+    const { user_id } = req.query;
 
-     if(password!==confirm_password){
-        return res.status(200).send({status: false, message: "Passwords do not match"})
+    if (password !== confirm_password) {
+      return res
+        .status(200)
+        .send({ status: false, message: "Passwords do not match" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {password: hashedPassword}, {new: true})
+    const updatedAccount = await AccountCollection.findOneAndUpdate(
+      { user_id },
+      { password: hashedPassword },
+      { new: true }
+    );
 
-    res.status(200).send({status: true, message: "Password Changed Successfully"})
-
-
+    res
+      .status(200)
+      .send({ status: true, message: "Password Changed Successfully" });
   } catch (error) {
     console.log("Error in changePassword");
     console.log(error);
@@ -124,14 +232,13 @@ const changePassword = async (req, res) => {
 // orange-f// Discuss
 const forgotPassword = async (req, res) => {
   try {
-    // const 
+    // const
   } catch (error) {
     console.log("Error in forgotPassword");
     console.log(error);
     res.send({ status: false, message: "Internal Server Error" });
   }
 };
-
 
 const generateOTP = async (req, res) => {
   try {
@@ -142,31 +249,39 @@ const generateOTP = async (req, res) => {
     //     return res.status(200).send({status: false, message: "Account Not Found"})
     // }
 
-    const {query}=req.query;
-    const accountData = await AccountCollection.findOne({$or: [
-        {email: query},
-        {user_id: query},
-    ]})
+    const { query } = req.query;
+    const accountData = await AccountCollection.findOne({
+      $or: [{ email: query }, { user_id: query }],
+    });
     // console.log(accountData)
-    if(!accountData){
-        return res.status(200).send({status: false, message: "No Account Found"})
+    if (!accountData) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Account Found" });
     }
 
     //red-f// const otp = createOTP()
-    const otp = "12345678"
-    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: accountData.user_id}, {otp: otp}, {new: true})
+    const otp = "12345678";
+    const updatedAccount = await AccountCollection.findOneAndUpdate(
+      { user_id: accountData.user_id },
+      { otp: otp },
+      { new: true }
+    );
 
     const emailOptions = {
-        from: process.env.GMAIL_EMAIL,
-        to: accountData.email,
-        subject: "OTP for EduVersa Account",
-        // text: `OTP: ${otp}`,
-        html: setOTPTemplate().replace("{{DATE}}", new Date().toDateString()).replace("{{OTP}}", otp)
-    }
+      from: process.env.GMAIL_EMAIL,
+      to: accountData.email,
+      subject: "OTP for EduVersa Account",
+      // text: `OTP: ${otp}`,
+      html: setOTPTemplate()
+        .replace("{{DATE}}", new Date().toDateString())
+        .replace("{{OTP}}", otp),
+    };
     sendEmail(emailOptions);
 
-    res.status(200).send({status: true, message: "OTP has been sent to your email"})
-
+    res
+      .status(200)
+      .send({ status: true, message: "OTP has been sent to your email" });
   } catch (error) {
     console.log("Error in generateOTP");
     console.log(error);
@@ -174,30 +289,30 @@ const generateOTP = async (req, res) => {
   }
 };
 
-
 const verifyOTP = async (req, res, next) => {
   try {
-    const {query, otp} = req.query;
+    const { query, otp } = req.query;
 
     // const {query}=req.query;
-    const isExistingAccount = await AccountCollection.findOne({$or: [
-        {email: query},
-        {user_id: query},
-    ]})
+    const isExistingAccount = await AccountCollection.findOne({
+      $or: [{ email: query }, { user_id: query }],
+    });
     // console.log(isExistingAccount)
-    if(!isExistingAccount){
-        return res.status(200).send({status: false, message: "No Account Found"})
+    if (!isExistingAccount) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Account Found" });
     }
 
-    if(isExistingAccount.otp!==otp){
-        return res.status(200).send({status: false, message: "Invalid OTP"})
+    if (isExistingAccount.otp !== otp) {
+      return res.status(200).send({ status: false, message: "Invalid OTP" });
     }
 
     //red-f// UNCOMMENT Later
     // const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {otp: null}, {new: true})
     // console.log(updatedAccount)
-    req.params.isOTPVerified = true
-    next()
+    req.params.isOTPVerified = true;
+    next();
   } catch (error) {
     console.log("Error in verifyOTP");
     console.log(error);
@@ -207,39 +322,58 @@ const verifyOTP = async (req, res, next) => {
 
 const loginToAccount = async (req, res) => {
   try {
-    const {user_id, password} = req.body;
+    const { user_id, password } = req.body;
 
-    const isExistingAccount = await AccountCollection.findOne({user_id})
-    if(!isExistingAccount){
-        return res.status(200).send({status: false, message: "No Account Found"})
+    const isExistingAccount = await AccountCollection.findOne({ user_id });
+    if (!isExistingAccount) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Account Found" });
     }
 
-    const isPasswordVerified = await bcrypt.compare(password, isExistingAccount.password)
-    if(!isPasswordVerified){
-        return res.status(200).send({status: false, message: "Incorrect Credentials"})
+    const isPasswordVerified = await bcrypt.compare(
+      password,
+      isExistingAccount.password
+    );
+    if (!isPasswordVerified) {
+      return res
+        .status(200)
+        .send({ status: false, message: "Incorrect Credentials" });
     }
 
-    const token = jwt.sign({email: isExistingAccount.email, user_id: isExistingAccount.user_id}, process.env.SECRET_KEY);
+    const token = jwt.sign(
+      { email: isExistingAccount.email, user_id: isExistingAccount.user_id },
+      process.env.SECRET_KEY
+    );
 
-    const tokens = isExistingAccount.tokens
-    tokens.push({token})
+    const tokens = isExistingAccount.tokens;
+    tokens.push({ token });
 
-    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {tokens}, {new: true});
+    const updatedAccount = await AccountCollection.findOneAndUpdate(
+      { user_id },
+      { tokens },
+      { new: true }
+    );
 
-
-    let profileData
+    let profileData;
     switch (updatedAccount.type) {
       case "applicant":
-        profileData = await ApplicantCollection.findOne({user_id:updatedAccount.user_id})
+        profileData = await ApplicantCollection.findOne({
+          user_id: updatedAccount.user_id,
+        });
         break;
-    
+
       default:
         break;
     }
 
-    res.status(200).send({status: true, message: "Logged In Successfully", data: updatedAccount, authToken: token, profileData: profileData})
-
-
+    res.status(200).send({
+      status: true,
+      message: "Logged In Successfully",
+      data: updatedAccount,
+      authToken: token,
+      profileData: profileData,
+    });
   } catch (error) {
     console.log("Error in loginToAccount");
     console.log(error);
@@ -247,24 +381,106 @@ const loginToAccount = async (req, res) => {
   }
 };
 
-const logoutFromOneAccount = async (req, res) => {
+const loginToAccountUsingSocialMedia = async (req, res) => {
   try {
-    const {user} = req
-    const token = req.headers.authorization
+    const { platform } = req.query;
+    // let { session } = req.body;
 
-    const accountData = await AccountCollection.findOne({user_id: user.user_id})
-    if(!accountData){
-        return res.status(200).send({status: false, message: "No account found"})
+    let email;
+
+    // session = {
+    //   expires: "2023-12-28T11:50:59.549Z",
+    //   user: {
+    //     email: "viditmodi2207@gmail.com",
+    //     image:
+    //       "https://lh3.googleusercontent.com/a/ACg8ocI3Kir-xZ-levJ4AqS7Wa1amlSOiiusYwwTBDpc_m5b2Q=s96-c",
+    //     name: "Vidit Modi",
+    //   },
+    // };
+
+    switch (platform) {
+      case "google":
+        email = req.body.user.email;
+        break;
+      case "github":
+        email = req.body.user.email;
+        break;
+
+      default:
+        break;
     }
 
+    const isExistingAccount = await AccountCollection.findOne({ email });
+    if (!isExistingAccount) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Account Found" });
+    }
 
-    let tokens = accountData.tokens
-    tokens = tokens.filter(element=>element.token!==token)
+    const token = jwt.sign(
+      { email: isExistingAccount.email, user_id: isExistingAccount.user_id },
+      process.env.SECRET_KEY
+    );
 
+    const tokens = isExistingAccount.tokens;
+    tokens.push({ token });
 
-    const updatedAccount = await AccountCollection.findOneAndUpdate({user_id: user.user_id}, {tokens}, {new: true})
+    const updatedAccount = await AccountCollection.findOneAndUpdate(
+      { email },
+      { tokens },
+      { new: true }
+    );
 
-    res.status(200).send({status: true, message: "Logged Out Successfully"})
+    let profileData;
+    switch (updatedAccount.type) {
+      case "applicant":
+        profileData = await ApplicantCollection.findOne({
+          user_id: updatedAccount.user_id,
+        });
+        break;
+
+      default:
+        break;
+    }
+
+    res.status(200).send({
+      status: true,
+      message: "Logged In Successfully Using " + platform,
+      data: updatedAccount,
+      authToken: token,
+      profileData: profileData,
+    });
+  } catch (error) {
+    console.log("Error in loginToAccountUsingSocialMedia");
+    console.log(error);
+    res.send({ status: false, message: "Internal Server Error" });
+  }
+};
+
+const logoutFromOneAccount = async (req, res) => {
+  try {
+    const { user } = req;
+    const token = req.headers.authorization;
+
+    const accountData = await AccountCollection.findOne({
+      user_id: user.user_id,
+    });
+    if (!accountData) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No account found" });
+    }
+
+    let tokens = accountData.tokens;
+    tokens = tokens.filter((element) => element.token !== token);
+
+    const updatedAccount = await AccountCollection.findOneAndUpdate(
+      { user_id: user.user_id },
+      { tokens },
+      { new: true }
+    );
+
+    res.status(200).send({ status: true, message: "Logged Out Successfully" });
   } catch (error) {
     console.log("Error in logoutFromOneAccount");
     console.log(error);
@@ -281,20 +497,20 @@ const logoutFromAllAccounts = async (req, res) => {
   }
 };
 
-
-const getUserID = async (req, res)=>{
+const getUserID = async (req, res) => {
   try {
-    const {isOTPVerified} = req.params
-    if(!isOTPVerified){
-        throw new Error("OTP was not verified")
+    const { isOTPVerified } = req.params;
+    if (!isOTPVerified) {
+      throw new Error("OTP was not verified");
     }
 
-
-    const {query} = req.query;
-    const accountData = await AccountCollection.findOne({email:query})
+    const { query } = req.query;
+    const accountData = await AccountCollection.findOne({ email: query });
     // console.log(accountData)
-    if(!accountData){
-        return res.status(200).send({status: false, message: "No Account Found"})
+    if (!accountData) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Account Found" });
     }
 
     const emailOptions = {
@@ -302,19 +518,20 @@ const getUserID = async (req, res)=>{
       to: accountData.email,
       subject: "User ID for your EduVersa Account",
       // text: `User ID: ${accountData.user_id}`,
-      html: setUserIDTemplate().replace("{{USER_ID}}", accountData.user_id)
-  }
-  // console.log(emailOptions)
-  sendEmail(emailOptions);
+      html: setUserIDTemplate().replace("{{USER_ID}}", accountData.user_id),
+    };
+    // console.log(emailOptions)
+    sendEmail(emailOptions);
 
-
-  res.status(200).send({status: true, message: "User ID has been sent to your email"})
+    res
+      .status(200)
+      .send({ status: true, message: "User ID has been sent to your email" });
   } catch (error) {
     console.log("Error in getUserID");
     console.log(error);
     res.send({ status: false, message: "Internal Server Error" });
   }
-}
+};
 
 module.exports = {
   createNewAccount,
@@ -326,5 +543,7 @@ module.exports = {
   loginToAccount,
   logoutFromOneAccount,
   logoutFromAllAccounts,
-  getUserID
+  getUserID,
+  loginToAccountUsingSocialMedia,
+  createNewAccountUsingSocialMedia,
 };

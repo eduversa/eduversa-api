@@ -40,7 +40,7 @@ applicantRouter
   .route("/year")
   .get(
     isAuthorizedAccess,
-    checkPermission("multiple applicant profiles read", 1),
+    checkPermission("multiple applicant profiles read", 4),
     readAllApplicantsByYear
   )
   .delete(

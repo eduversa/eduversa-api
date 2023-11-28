@@ -8,6 +8,8 @@ const {
   loginToAccount,
   logoutFromOneAccount,
   getUserID,
+  loginToAccountUsingSocialMedia,
+  createNewAccountUsingSocialMedia,
 } = require("../controllers/accounts.controllers");
 const { isAuthorizedAccess } = require("../middlewares/auth.middlewares");
 
@@ -29,6 +31,10 @@ accountRouter
   .post(loginToAccount)
   .patch(isAuthorizedAccess, logoutFromOneAccount);
 
+accountRouter
+  .route("/auth/platform")
+  .post(createNewAccountUsingSocialMedia)
+  .put(loginToAccountUsingSocialMedia);
 //green-u// create new account
 //green-u// read single account - query - userid, email
 //blue-u// read multiple accounts - query - userid, email
@@ -83,6 +89,18 @@ accountRouter.get("/help", (req, res) => {
         method: "GET",
         route: "/account/userid?query={{user_id or email}}&otp={{otp}}",
         desc: "sends the user id to the registered email",
+      },
+      {
+        method: "POST",
+        route: "/account/auth/platform?platform={{PLATFORM_NAME}}",
+        desc: "creates new account and applicant profile using any social platform",
+        body: "{{SESSION_OBJECT}}",
+      },
+      {
+        method: "PUT",
+        route: "/account/auth/platform?platform={{PLATFORM_NAME}}",
+        desc: "logs into the account using any social platform",
+        body: "{{SESSION_OBJECT}}",
       },
     ],
   });
