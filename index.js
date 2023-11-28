@@ -26,6 +26,7 @@ app.use(
       "http://192.168.0.101:3000",
       "http://192.168.0.102:3000",
       "https://eduversa.github.io",
+      "https://www.eduversa.in",
     ],
     methods: "GET,POST,PUT,DELETE,PATCH,UPDATE,HEAD",
     allowedHeaders:
