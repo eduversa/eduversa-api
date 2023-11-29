@@ -21,12 +21,11 @@ const formatMarks = (subjectString) => {
     );
     subjects = subjects + subject;
     marks[subject] = score;
-
-    return { subjects, marks };
   });
+  return { subjects, marks };
 
-  academic_info.secondary.subjects = subjects;
-  academic_info.secondary.marks = marks;
+  // academic_info.secondary.subjects = subjects;
+  // academic_info.secondary.marks = marks;
 };
 class Applicant {
   constructor(data, type) {
