@@ -82,7 +82,7 @@ const createNewAccount = async (req, res) => {
 const createNewAccountUsingSocialMedia = async (req, res) => {
   try {
     const { platform } = req.query;
-    let personal_info, image;
+    let personal_info, image, email;
 
     // const {name, email, phone, password, confirm_password} = req.body;
 
