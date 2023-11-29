@@ -106,7 +106,7 @@ const updateApplicant = async (req, res) => {
   } catch (error) {
     console.log("Error in updateApplicant");
     console.log(error);
-    res.send({ status: false, message: "catch error", error });
+    res.send({ status: false, message: "Internal Server Error", error });
   }
 };
 
