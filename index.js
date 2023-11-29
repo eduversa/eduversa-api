@@ -28,6 +28,7 @@ app.use(
       "https://eduversa.github.io",
       "https://eduversa.in",
       "https://www.eduversa.in",
+      "https://vidit-eduversa.netlify.app",
     ],
     methods: "GET,POST,PUT,DELETE,PATCH,UPDATE,HEAD",
     allowedHeaders:
