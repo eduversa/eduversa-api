@@ -3,41 +3,73 @@ const cloudinary = require("../config/cloudinary.config");
 const AccountCollection = require("../models/accounts.model");
 const { ApplicantCollection } = require("../models/profile.models");
 
-const updateApplicant = async (req, res) => {
+const updateApplicant = async (req, res, next) => {
   try {
     const { user_id, type } = req.query;
 
-    const isExistingApplicant = await ApplicantCollection.findOne({ user_id });
-    if (!isExistingApplicant) {
-      return res
-        .status(200)
-        .send({ status: false, message: "No applicant found" });
-    }
+    const applicantData = new Applicant();
+    await applicantData.findOneByUserID(user_id);
+    const data = req.body;
+
+    // const isExistingApplicant = await ApplicantCollection.findOne({ user_id });
+    // if (!isExistingApplicant) {
+    //   return res
+    //     .status(200)
+    //     .send({ status: false, message: "No applicant found" });
+    // }
 
     // console.log(req.body)
-    const applicantData = new Applicant(req.body, type);
+    // const applicantData = new Applicant(req.body, type);
     // console.log(applicantData)
     let updatedApplicant = false;
 
     switch (type) {
       case "personal":
-        updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-          { user_id },
-          { personal_info: applicantData.personal_info },
-          { new: true }
-        );
+        const {
+          name,
+          gender,
+          dob,
+          present_address,
+          permanent_address,
+          email,
+          contact,
+          category,
+          blood_group,
+          aadhar_number,
+          pan_number,
+        } = data;
+        applicantData
+          .setName(name)
+          .setGender(gender)
+          .setDOB(dob)
+          .setAddress("present", present_address)
+          .setAddress("permanent", permanent_address)
+          .areAddressesSame()
+          .setEmail("personal", email)
+          .setContact("personal", contact)
+          .setCategory(category)
+          .setBloodGroup(blood_group)
+          .setAadharNumber("personal", aadhar_number)
+          .setPanNumber("personal", pan_number);
 
-        const updatedAccount = await AccountCollection.findOneAndUpdate(
-          { user_id },
-          {
-            first_name: applicantData.personal_info.first_name,
-            middle_name: applicantData.personal_info.middle_name,
-            last_name: applicantData.personal_info.last_name,
-            phone: applicantData.personal_info.contact,
-          },
-          { new: true }
-        );
-        console.log(updatedAccount);
+        applicantData.updateByUserID(user_id);
+        // updatedApplicant = await ApplicantCollection.findOneAndUpdate(
+        //   { user_id },
+        //   { personal_info: applicantData.personal_info },
+        //   { new: true }
+        // );
+
+        // const updatedAccount = await AccountCollection.findOneAndUpdate(
+        //   { user_id },
+        //   {
+        //     first_name: applicantData.personal_info.first_name,
+        //     middle_name: applicantData.personal_info.middle_name,
+        //     last_name: applicantData.personal_info.last_name,
+        //     phone: applicantData.personal_info.contact,
+        //   },
+        //   { new: true }
+        // );
+        // console.log(updatedAccount);
         break;
       case "academic":
         updatedApplicant = await ApplicantCollection.findOneAndUpdate(
@@ -101,26 +133,29 @@ const updateApplicant = async (req, res) => {
     res.status(200).send({
       status: true,
       message: "Applicant Updated Successfully",
-      data: updatedApplicant,
+      data: applicantData,
     });
   } catch (error) {
     console.log("Error in updateApplicant");
-    console.log(error);
-    res.send({ status: false, message: "Internal Server Error", error });
+    // console.log(error);
+    next(error);
+    // res.send({ status: false, message: "Internal Server Error", error });
   }
 };
 
-const readApplicantByUserID = async (req, res) => {
+const readApplicantByUserID = async (req, res, next) => {
   try {
     const { user_id } = req.query;
 
-    const applicantData = await ApplicantCollection.findOne({ user_id });
+    const applicantData = new Applicant();
+    await applicantData.findOneByUserID(user_id);
+    // const applicantData = await ApplicantCollection.findOne({ user_id });
 
-    if (!applicantData) {
-      return res
-        .status(200)
-        .send({ status: false, message: "No applicant found" });
-    }
+    // if (!applicantData) {
+    //   return res
+    //     .status(200)
+    //     .send({ status: false, message: "No applicant found" });
+    // }
 
     res.status(200).send({
       status: true,
@@ -129,8 +164,9 @@ const readApplicantByUserID = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in readApplicantByUserID");
-    console.log(error);
-    res.send({ status: false, message: "catch error", error });
+    next(error);
+    // console.log(error);
+    // res.send({ status: false, message: "catch error", error });
   }
 };
 

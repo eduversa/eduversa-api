@@ -7,6 +7,7 @@ const applicantRouter = require("./routes/applicant.routes");
 const collegeRouter = require("./routes/college.routes");
 const studentRouter = require("./routes/student.routes");
 const permissionRouter = require("./routes/permissions.routes");
+const { handleError } = require("./middlewares/error.middlewares");
 
 const app = express();
 const port = process.env.PORT;
@@ -63,5 +64,7 @@ app.use("/applicant", applicantRouter);
 app.use("/college", collegeRouter);
 app.use("/student", studentRouter);
 app.use("/permission", permissionRouter);
+
+app.use(handleError);
 
 connectToServer(app, port);
