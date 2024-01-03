@@ -838,7 +838,7 @@ class Applicant {
     }
     return this;
   }
-  //blue-u// Aadhar Number Setter
+  //blue-u// PAN Number Setter
   setPanNumber(numberFor, number) {
     if (!["personal", "guardian"].includes(numberFor)) {
       throw new Error("Server Error: Invalid PAN Number For");

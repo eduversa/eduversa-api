@@ -2,6 +2,7 @@ const {
   emptyStringRegEx,
   emailRegex,
   contactRegex,
+  alphabetRegex,
 } = require("../functions/data/RegEx.data");
 const {
   MissingValueError,
@@ -15,6 +16,12 @@ class Validator {
       [null, undefined, NaN].includes(value)
     ) {
       throw new MissingValueError(service, field);
+    }
+    return true;
+  }
+  isAlphabetString(value, service = undefined, field = undefined) {
+    if (!alphabetRegex.test(value)) {
+      throw new FailedValidationError(service, field, value);
     }
     return true;
   }
