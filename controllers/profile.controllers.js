@@ -1,4 +1,5 @@
-const Applicant = require("../classes/applicant.class");
+// const Applicant = require("../classes/applicant.class");
+const Applicant = require("../classes/profiles/applicant.builder");
 const cloudinary = require("../config/cloudinary.config");
 const AccountCollection = require("../models/accounts.model");
 const { ApplicantCollection } = require("../models/profile.models");
@@ -25,51 +26,10 @@ const updateApplicant = async (req, res, next) => {
 
     switch (type) {
       case "personal":
-        const {
-          name,
-          gender,
-          dob,
-          present_address,
-          permanent_address,
-          email,
-          contact,
-          category,
-          blood_group,
-          aadhar_number,
-          pan_number,
-        } = data;
-        applicantData
-          .setName(name)
-          .setGender(gender)
-          .setDOB(dob)
-          .setAddress("present", present_address)
-          .setAddress("permanent", permanent_address)
-          .areAddressesSame()
-          .setEmail("personal", email)
-          .setContact("personal", contact)
-          .setCategory(category)
-          .setBloodGroup(blood_group)
-          .setAadharNumber("personal", aadhar_number)
-          .setPanNumber("personal", pan_number);
+        applicantData.setPersonalInfo(data);
 
         applicantData.updateByUserID(user_id);
-        // updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-        //   { user_id },
-        //   { personal_info: applicantData.personal_info },
-        //   { new: true }
-        // );
 
-        // const updatedAccount = await AccountCollection.findOneAndUpdate(
-        //   { user_id },
-        //   {
-        //     first_name: applicantData.personal_info.first_name,
-        //     middle_name: applicantData.personal_info.middle_name,
-        //     last_name: applicantData.personal_info.last_name,
-        //     phone: applicantData.personal_info.contact,
-        //   },
-        //   { new: true }
-        // );
-        // console.log(updatedAccount);
         break;
       case "academic":
         updatedApplicant = await ApplicantCollection.findOneAndUpdate(
@@ -79,11 +39,14 @@ const updateApplicant = async (req, res, next) => {
         );
         break;
       case "family":
-        updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-          { user_id },
-          { family_info: applicantData.family_info },
-          { new: true }
-        );
+        // updatedApplicant = await ApplicantCollection.findOneAndUpdate(
+        //   { user_id },
+        //   { family_info: applicantData.family_info },
+        //   { new: true }
+        // );
+        applicantData.setFamilyInfo(data);
+
+        applicantData.updateByUserID(user_id);
         break;
       case "course":
         updatedApplicant = await ApplicantCollection.findOneAndUpdate(
@@ -172,8 +135,8 @@ const readApplicantByUserID = async (req, res, next) => {
 
 const readAllApplicantsByYear = async (req, res) => {
   try {
-    // const year = req.query.year;
-    const year = new Date().getFullYear();
+    const year = req.query.year;
+    // const year = new Date().getFullYear();
 
     const applicantArray = await ApplicantCollection.find({
       "course_info.admission_year": year,

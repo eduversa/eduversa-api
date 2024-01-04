@@ -632,36 +632,36 @@ class Applicant {
   // }
 
   constructor() {
-    this.image = null;
-    this.user_id = null;
-    this.personal_info = {
-      first_name: "",
-      middle_name: null,
-      last_name: "",
-      gender: "",
-      dob: null,
-      present_address: {
-        street: "",
-        pincode: "",
-        city: "",
-        district: "",
-        state: "",
-      },
-      are_addresses_same: true,
-      permanent_address: {
-        street: "",
-        pincode: "",
-        city: "",
-        district: "",
-        state: "",
-      },
-      email: "",
-      contact: "",
-      category: "",
-      blood_group: "",
-      aadhar_number: "",
-      pan_number: "",
-    };
+    // this.image = null;
+    // this.user_id = null;
+    // this.personal_info = {
+    //   first_name: "",
+    //   middle_name: null,
+    //   last_name: "",
+    //   gender: "",
+    //   dob: null,
+    //   present_address: {
+    //     street: "",
+    //     pincode: "",
+    //     city: "",
+    //     district: "",
+    //     state: "",
+    //   },
+    //   are_addresses_same: true,
+    //   permanent_address: {
+    //     street: "",
+    //     pincode: "",
+    //     city: "",
+    //     district: "",
+    //     state: "",
+    //   },
+    //   email: "",
+    //   contact: "",
+    //   category: "",
+    //   blood_group: "",
+    //   aadhar_number: "",
+    //   pan_number: "",
+    // };
 
     this.family_info = {
       father: {
@@ -729,8 +729,8 @@ class Applicant {
       stream: "",
       admission_year: "",
     };
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    // this.createdAt = new Date();
+    // this.updatedAt = new Date();
   }
 
   async findOneByUserID(user_id) {
@@ -776,6 +776,65 @@ class Applicant {
   }
 
   //blue-f// Personal Info Setter Methods
+  //blue-u// Personal Info Setter
+  setPersonalInfo(data) {
+    const {
+      name,
+      gender,
+      dob,
+      present_address,
+      permanent_address,
+      email,
+      contact,
+      category,
+      blood_group,
+      aadhar_number,
+      pan_number,
+    } = data;
+    this.setName(name)
+      .setGender(gender)
+      .setDOB(dob)
+      .setAddress("present", present_address)
+      .setAddress("permanent", permanent_address)
+      .areAddressesSame()
+      .setEmail("personal", email)
+      .setContact("personal", contact)
+      .setCategory(category)
+      .setBloodGroup(blood_group)
+      .setAadharNumber("personal", aadhar_number)
+      .setPanNumber("personal", pan_number);
+    return this;
+  }
+  //blue-u// Family Info Setter
+  setFamilyInfo(data) {
+    const {
+      name,
+      gender,
+      dob,
+      present_address,
+      permanent_address,
+      email,
+      contact,
+      category,
+      blood_group,
+      aadhar_number,
+      pan_number,
+    } = data;
+    this.setName(name)
+      .setGender(gender)
+      .setDOB(dob)
+      .setAddress("present", present_address)
+      .setAddress("permanent", permanent_address)
+      .areAddressesSame()
+      .setEmail("personal", email)
+      .setContact("personal", contact)
+      .setCategory(category)
+      .setBloodGroup(blood_group)
+      .setAadharNumber("personal", aadhar_number)
+      .setPanNumber("personal", pan_number);
+    return this;
+  }
+
   //blue-u// Name Setter
   setName(data) {
     const name = data;
@@ -842,18 +901,18 @@ class Applicant {
   }
 
   //blue-u// Are Addresses Same Setter
-  areAddressesSame(isSame) {
+  areAddressesSame() {
     //LEAVE FOR NOW
-    // const address1 = this.personal_info.present_address;
-    // const address2 = this.personal_info.permanent_address;
+    const address1 = this.personal_info.present_address;
+    const address2 = this.personal_info.permanent_address;
 
-    // this.personal_info.are_addresses_same =
-    //   address1.pincode === address2.pincode &&
-    //   address1.street === address2.street &&
-    //   address1.city === address2.city &&
-    //   address1.district === address2.district &&
-    //   address1.state === address2.state;
-    this.personal_info.are_addresses_same = isSame;
+    this.personal_info.are_addresses_same =
+      address1.pincode === address2.pincode &&
+      address1.street === address2.street &&
+      address1.city === address2.city &&
+      address1.district === address2.district &&
+      address1.state === address2.state;
+    // this.personal_info.are_addresses_same = isSame;
     return this;
   }
   //blue-u// All Email Setter
