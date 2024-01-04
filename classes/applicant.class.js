@@ -152,6 +152,8 @@ class Applicant {
     stream: "",
     admission_year: "",
   };
+  createdAt = null;
+  updatedAt = null;
 
   // constructor(data, type) {
   //   this.image = data.image || "";
@@ -629,7 +631,107 @@ class Applicant {
   //   // }
   // }
 
-  constructor() {}
+  constructor() {
+    this.image = null;
+    this.user_id = null;
+    this.personal_info = {
+      first_name: "",
+      middle_name: null,
+      last_name: "",
+      gender: "",
+      dob: null,
+      present_address: {
+        street: "",
+        pincode: "",
+        city: "",
+        district: "",
+        state: "",
+      },
+      are_addresses_same: true,
+      permanent_address: {
+        street: "",
+        pincode: "",
+        city: "",
+        district: "",
+        state: "",
+      },
+      email: "",
+      contact: "",
+      category: "",
+      blood_group: "",
+      aadhar_number: "",
+      pan_number: "",
+    };
+
+    this.family_info = {
+      father: {
+        first_name: "",
+        middle_name: null,
+        last_name: "",
+        email: "",
+        contact: "",
+      },
+      mother: {
+        first_name: "",
+        middle_name: null,
+        last_name: "",
+        email: "",
+        contact: "",
+      },
+      guardian: {
+        first_name: "",
+        middle_name: null,
+        last_name: "",
+        relation: "",
+        office_address: {
+          street: "",
+          pincode: "",
+          city: "",
+          district: "",
+          state: "",
+        },
+        occupation: "",
+        designation: "",
+        office_contact: "",
+        contact: "",
+        income: "",
+        email: "",
+        pan_number: "",
+        aadhar_number: "",
+      },
+    };
+    this.academic_info = {
+      admission: { exam_name: "", year_of_exam: "", roll_number: "", rank: "" },
+      secondary: {
+        exam_name: "",
+        year_of_exam: "",
+        board: "",
+        aggregate: "",
+        school_name: "",
+        subjectString: "",
+        subjects: "",
+        marks: null,
+      },
+      higher_secondary: {
+        exam_name: "",
+        year_of_exam: "",
+        board: "",
+        aggregate: "",
+        school_name: "",
+        subjectString: "",
+        subjects: "",
+        marks: null,
+      },
+    };
+    this.course_info = {
+      course_name: "",
+      duration: "",
+      stream: "",
+      admission_year: "",
+    };
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
 
   async findOneByUserID(user_id) {
     try {
@@ -640,6 +742,8 @@ class Applicant {
       this.academic_info = applicantData.academic_info;
       this.family_info = applicantData.family_info;
       this.course_info = applicantData.course_info;
+      this.createdAt = applicantData.createdAt;
+      this.updatedAt = applicantData.updatedAt;
       return this;
     } catch (error) {
       throw new NotFoundError("Applicant", "UserID", user_id);
