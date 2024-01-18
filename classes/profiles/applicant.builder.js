@@ -1,5 +1,6 @@
 const { ApplicantCollection } = require("../../models/profile.models");
 const { NotFoundError } = require("../errors/error.prototypes");
+const validate = require("../valiator.class");
 const Learner = require("./learner.class");
 
 class Applicant extends Learner {
@@ -9,6 +10,44 @@ class Applicant extends Learner {
     stream: "",
     admission_year: "",
   };
+
+  constructor() {
+    super();
+    this.course_info.course_name = "";
+    this.course_info.duration = "";
+    this.course_info.stream = "";
+    this.course_info.admission_year = `${new Date().getFullYear()}`;
+  }
+
+  setCourseInfo(data) {
+    const { course_name, duration, stream, admission_year } = data;
+    this.setCourseName(course_name)
+      .setDuration(duration)
+      .setStream(stream)
+      .setAdmissionYear(admission_year);
+    return this;
+  }
+
+  setCourseName(name) {
+    validate.isEmpty(name, "Applicant Profile", "Course Name");
+    this.course_info.course_name = name;
+    return this;
+  }
+  setDuration(value) {
+    // validate.isEmpty(name, "Applicant Profile", "Course Name")
+    this.course_info.duration = value;
+    return this;
+  }
+  setStream(value) {
+    // validate.isEmpty(name, "Applicant Profile", "Course Name")
+    this.course_info.stream = value;
+    return this;
+  }
+  setAdmissionYear(value) {
+    // validate.isEmpty(name, "Applicant Profile", "Course Name")
+    this.course_info.admission_year = value;
+    return this;
+  }
 
   async findOneByUserID(user_id) {
     try {

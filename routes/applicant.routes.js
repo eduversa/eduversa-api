@@ -21,14 +21,14 @@ applicantRouter.get("/test", (req, res) => {
 applicantRouter
   .route("/")
   .put(
-    // isAuthorizedAccess,
-    // checkPermission("applicant profile update", 1),
+    isAuthorizedAccess,
+    checkPermission("applicant profile update", 1),
     profileImageUploader.single("image"),
     updateApplicant
   )
   .get(
-    // isAuthorizedAccess,
-    // checkPermission("single applicant profile read", 1),
+    isAuthorizedAccess,
+    checkPermission("single applicant profile read", 1),
     readApplicantByUserID
   )
   .delete(

@@ -30,7 +30,13 @@ class Formatter {
     return nameObject;
   };
   address(data) {
-    let object = {};
+    let object = {
+      street: null,
+      pincode: null,
+      district: null,
+      city: null,
+      state: null,
+    };
     if (data) {
       object.street = data.street;
       object.pincode = data.pincode;

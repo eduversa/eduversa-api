@@ -26,34 +26,17 @@ const updateApplicant = async (req, res, next) => {
 
     switch (type) {
       case "personal":
-        applicantData.setPersonalInfo(data);
-
-        applicantData.updateByUserID(user_id);
-
+        applicantData.setPersonalInfo(data).updateByUserID(user_id);
         break;
       case "academic":
-        updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-          { user_id },
-          { academic_info: applicantData.academic_info },
-          { new: true }
-        );
+        applicantData.setAcademicInfo(data).updateByUserID(user_id);
         break;
       case "family":
-        // updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-        //   { user_id },
-        //   { family_info: applicantData.family_info },
-        //   { new: true }
-        // );
-        applicantData.setFamilyInfo(data);
-
-        applicantData.updateByUserID(user_id);
+        applicantData.setFamilyInfo(data).updateByUserID(user_id);
         break;
       case "course":
-        updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-          { user_id },
-          { course_info: applicantData.course_info },
-          { new: true }
-        );
+        applicantData.setCourseInfo(data).updateByUserID(user_id);
+
         break;
       case "files":
         console.log(req.file);
@@ -77,11 +60,7 @@ const updateApplicant = async (req, res, next) => {
             // fs.unlinkSync(filePath);
 
             // return res.status(200).json({ message: 'File uploaded to Cloudinary successfully' });
-            updatedApplicant = await ApplicantCollection.findOneAndUpdate(
-              { user_id },
-              { image: result.url },
-              { new: true }
-            );
+            applicantData.setImage(result.url).updateByUserID(user_id);
           }
         );
 
