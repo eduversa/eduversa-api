@@ -1,3 +1,5 @@
+const Applicant = require("../classes/profiles/applicant.builder");
+const Student = require("../classes/profiles/student.builder");
 const { sendEmail } = require("../config/nodemailer.config");
 const AccountCollection = require("../models/accounts.model");
 const {
@@ -9,19 +11,27 @@ const approveStudentAdmission = async (req, res) => {
   try {
     const { user_id } = req.query;
 
-    const isExistingStudent = await StudentCollection.findOne({ user_id });
-    if (isExistingStudent) {
+    const student = new Student();
+    if(await student.findOneByStudentID(user_id)){
       return res
         .status(200)
         .send({ status: false, message: "Existing Student" });
+
     }
 
-    const applicantData = await ApplicantCollection.findOne({ user_id });
-    if (!applicantData) {
-      return res
-        .status(200)
-        .send({ status: false, message: "No Such Applicant" });
-    }
+    // const isExistingStudent = await StudentCollection.findOne({ user_id });
+    // if (isExistingStudent) {
+    // }
+
+    const applicant = new Applicant();
+    applicant.findOneByUserID(user_id)
+
+    // const applicantData = await ApplicantCollection.findOne({ user_id });
+    // if (!applicantData) {
+    //   return res
+    //     .status(200)
+    //     .send({ status: false, message: "No Such Applicant" });
+    // }
 
     const newStudent = new StudentCollection({
       user_id: `1${applicantData.user_id}`,
@@ -52,8 +62,13 @@ const approveStudentAdmission = async (req, res) => {
 
     const updatedAccount = await AccountCollection.findOneAndUpdate(
       { user_id },
-      { user_id: addedStudent.course_info.enrollment_number, type: "student", accessLevel:2, tokens:[] },
-      {new: true}
+      {
+        user_id: addedStudent.course_info.enrollment_number,
+        type: "student",
+        accessLevel: 2,
+        tokens: [],
+      },
+      { new: true }
     );
 
     const emailOptions = {

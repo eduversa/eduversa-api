@@ -30,6 +30,7 @@ app.use(
       "https://eduversa.in",
       "https://www.eduversa.in",
       "https://vidit-eduversa.netlify.app",
+      "https://eduversa-vidit.vercel.app",
     ],
     methods: "GET,POST,PUT,DELETE,PATCH,UPDATE,HEAD",
     allowedHeaders:
@@ -39,6 +40,9 @@ app.use(
 );
 
 //yellow-f// DEFAULT ROUTE START
+app.head("/", (req, res) => {
+  console.log("Uptime Robot Hit");
+});
 app.get("/connection", async (req, res) => {
   res.send("API is working");
 });
