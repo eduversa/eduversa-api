@@ -91,6 +91,29 @@ class Applicant extends Learner {
       throw new BadRequestError("Applicant", "Update");
     }
   }
+
+  async create() {
+    try {
+      const data = new ApplicantCollection({
+        image: this.image,
+        user_id: this.user_id,
+        personal_info: this.personal_info,
+        academic_info: this.academic_info,
+        family_info: this.family_info,
+        course_info: this.course_info,
+      });
+      const savedApplicant = await data.save();
+      this.image = savedApplicant.image;
+      this.user_id = savedApplicant.user_id;
+      this.personal_info = savedApplicant.personal_info;
+      this.academic_info = savedApplicant.academic_info;
+      this.family_info = savedApplicant.family_info;
+      this.course_info = savedApplicant.course_info;
+      return this;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
 
 module.exports = Applicant;

@@ -7,16 +7,17 @@ const {
   ApplicantCollection,
 } = require("../models/profile.models");
 
+const jwt = require("jsonwebtoken");
+
 const approveStudentAdmission = async (req, res) => {
   try {
     const { user_id } = req.query;
 
     const student = new Student();
-    if(await student.findOneByStudentID(user_id)){
+    if (await student.findOneByStudentID(user_id)) {
       return res
         .status(200)
         .send({ status: false, message: "Existing Student" });
-
     }
 
     // const isExistingStudent = await StudentCollection.findOne({ user_id });
@@ -24,37 +25,30 @@ const approveStudentAdmission = async (req, res) => {
     // }
 
     const applicant = new Applicant();
-    applicant.findOneByUserID(user_id)
 
     // const applicantData = await ApplicantCollection.findOne({ user_id });
-    // if (!applicantData) {
-    //   return res
-    //     .status(200)
-    //     .send({ status: false, message: "No Such Applicant" });
-    // }
+    if (!(await applicant.findOneByUserID(user_id))) {
+      return res
+        .status(200)
+        .send({ status: false, message: "No Such Applicant" });
+    }
 
-    const newStudent = new StudentCollection({
-      user_id: `1${applicantData.user_id}`,
-      image: applicantData.image,
-      personal_info: applicantData.personal_info,
-      academic_info: applicantData.academic_info,
-      family_info: applicantData.family_info,
-      course_info: {
-        ...applicantData.course_info,
-        section: "A",
-        total_sem: this.duration * 2,
-        current_sem: "1",
-        current_year: "1",
-        passout_year: this.admission_year + this.duration,
-        enrollment_number: `1${applicantData.user_id}`,
-        registration_number: `304${applicantData.user_id}`,
-      },
-    });
+    student
+      .setPersonalInfo(applicant.personal_info)
+      .setAcademicInfo(applicant.academic_info)
+      .setFamilyInfo(applicant.family_info)
+      .setUserID(`1${applicant.user_id}`)
+      .setImage(applicant.image)
+      .setCourseInfo(applicant.course_info)
+      .setEnrollmentNumber(`1${applicant.user_id}`)
+      .setRegistrationNumber(`304${applicant.user_id}`);
+
+    await student.create();
 
     //red-f// Write a function to generate Enrollment Number and Registration Number
 
-    const addedStudent = await newStudent.save();
-    console.log(addedStudent);
+    // const addedStudent = await newStudent.save();
+    // console.log(addedStudent);
 
     const deletedApplicant = await ApplicantCollection.findOneAndDelete({
       user_id,
@@ -63,7 +57,14 @@ const approveStudentAdmission = async (req, res) => {
     const updatedAccount = await AccountCollection.findOneAndUpdate(
       { user_id },
       {
-        user_id: addedStudent.course_info.enrollment_number,
+        security_token: jwt.sign(
+          {
+            user_id: student.user_id,
+            type: "student",
+          },
+          process.env.SECURITY_KEY
+        ),
+        user_id: student.user_id,
         type: "student",
         accessLevel: 2,
         tokens: [],
@@ -77,9 +78,11 @@ const approveStudentAdmission = async (req, res) => {
       subject: "New User ID for your EduVersa Account",
       text: `User ID: ${updatedAccount.user_id}`,
     };
-    console.log(emailOptions);
+    // console.log(emailOptions);
     sendEmail(emailOptions);
-    res.status(200).send({ status: true, message: "Applicant Approved" });
+    res
+      .status(200)
+      .send({ status: true, message: "Applicant Approved", data: student });
   } catch (error) {
     console.log("Error in createNewStudent");
     console.log(error);

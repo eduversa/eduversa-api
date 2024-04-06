@@ -326,10 +326,12 @@ class Learner extends Profile {
   setAdmissionExamRollNumber(number) {
     validate.isEmpty(number, "Academic Info", "Admission Exam Roll Number");
     this.academic_info.admission.roll_number = number;
+    return this;
   }
   setAdmissionExamRank(number) {
     validate.isEmpty(number, "Academic Info", "Admission Exam Rank");
     this.academic_info.admission.rank = number;
+    return this;
   }
 
   //blue-u// Admission Exam Setter

@@ -14,62 +14,52 @@ const {
   setOTPTemplate,
   setUserIDTemplate,
 } = require("../functions/template.functions");
+const Account = require("../classes/account.class");
+const Applicant = require("../classes/profiles/applicant.builder");
 
 const createNewAccount = async (req, res) => {
   try {
     const { email } = req.body;
-    // const {name, email, phone, password, confirm_password} = req.body;
 
-    const existingAccount = await AccountCollection.findOne({ email });
-    if (existingAccount) {
+    const account = new Account();
+    account.setEmail(email);
+
+    // const existingAccount = await AccountCollection.findOne({ email });
+    if (await account.findOne()) {
+      // console.log("exists");
       return res
         .status(200)
         .send({ status: false, message: "Account already exists" });
     }
 
-    // const nameObject = formatName(name);
-    // if(!nameObject){
-    //     return res.status(200).send({status: false, message: "Invalid Name"})
-    // }
+    account.setSecurityToken().addAuthToken();
+    const password = account.password;
+    await account.hashPassword();
+    // console.log(account);
+    await account.create();
 
-    const user_id = generateUserID();
     //red-f// const password = genearatePassword();
-    const password = "Test@1234";
-    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // const securityToken = jwt.sign({ email, user_id }, process.env.SECURITY_KEY);
-    const token = jwt.sign({ email, user_id }, process.env.SECRET_KEY);
-    const tokens = [{ token }];
-
-    const newAccount = new AccountCollection({
-      email,
-      user_id,
-      password: hashedPassword,
-      tokens,
-    });
-
-    const newApplicant = new ApplicantCollection({
-      personal_info: { email: email },
-      user_id: user_id,
-    });
-    const addedApplicant = newApplicant.save();
+    const applicant = new Applicant();
+    applicant.setPersonalEmail(account.email);
+    applicant.setUserID(account.user_id);
+    await applicant.create();
 
     const emailOptions = {
       from: process.env.GMAIL_EMAIL,
-      to: email,
+      to: account.email,
       subject: "EduVersa Account Creation Confirmation",
       // text: `User ID: ${user_id}\nPassword: ${password}`,
       html: setCredentialsTemplate()
-        .replace("{{USER_ID}}", user_id)
+        .replace("{{USER_ID}}", account.user_id)
         .replace("{{PASSWORD}}", password),
     };
     sendEmail(emailOptions);
-    const addedAccount = await newAccount.save();
 
     res.status(200).send({
       status: true,
       message: "Account Creation Success",
-      data: addedAccount,
+      data: account,
     });
     // console.log(newAccount);
   } catch (error) {

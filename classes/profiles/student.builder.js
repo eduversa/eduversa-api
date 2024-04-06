@@ -34,7 +34,11 @@ class Student extends Learner {
       .setSection()
       .setStream(stream)
       .setAdmissionYear(admission_year);
-
+    this.course_info.current_year = "1";
+    this.course_info.currrent_sem = "1";
+    this.course_info.passout_year =
+      this.course_info.admission_year + this.course_info.duration;
+    this.course_info.total_sem = 2 * this.course_info.duration;
     return this;
   }
 
@@ -59,6 +63,16 @@ class Student extends Learner {
     return this;
   }
 
+  setEnrollmentNumber(value) {
+    this.course_info.enrollment_number = value;
+    return this;
+  }
+
+  setRegistrationNumber(value) {
+    this.course_info.registration_number = value;
+    return this;
+  }
+
   setSection() {
     // Logic to calculate the section (using student matrix)
 
@@ -66,7 +80,28 @@ class Student extends Learner {
     return this;
   }
 
-  async create() {}
+  async create() {
+    try {
+      const data = new StudentCollection({
+        image: this.image,
+        user_id: this.user_id,
+        personal_info: this.personal_info,
+        academic_info: this.academic_info,
+        family_info: this.family_info,
+        course_info: this.course_info,
+      });
+      const savedStudent = await data.save();
+      this.image = savedStudent.image;
+      this.user_id = savedStudent.user_id;
+      this.personal_info = savedStudent.personal_info;
+      this.academic_info = savedStudent.academic_info;
+      this.family_info = savedStudent.family_info;
+      this.course_info = savedStudent.course_info;
+      return this;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   async findOneByStudentID(user_id) {
     try {
       const studentData = await StudentCollection.findOne({ user_id });

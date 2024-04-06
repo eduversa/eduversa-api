@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { PrismLogger } = require("prism-logger");
 
 const db_name = process.env.DB_NAME;
 
@@ -9,38 +10,37 @@ const connectToServer = async (app, port) => {
     const isDBConnected = await mongoose.connect(mongoURI);
 
     if (!isDBConnected) {
-      console.log("Mongoose Connection Failed");
+      PrismLogger.error("Mongoose Connection Failed");
       return;
     }
-    console.log("Connected to MongoDB Server. Database: " + db_name);
+    PrismLogger.magenta("Connected to MongoDB Server. Database: " + db_name);
     app.listen(port, () => {
-      console.log("Server is listening at port: " + port);
+      PrismLogger.magenta("Server is listening at port: " + port);
     });
   } catch (error) {
-    console.log("Error in Mongoose Connection");
-    console.log(error);
+    PrismLogger.error("Error in Mongoose Connection");
+    PrismLogger.error(error);
   }
 };
 
-
 const clearAllCollections = async () => {
-    try {
-      const collections = await mongoose.connection.db.listCollections().toArray();
-  
-      for (const collection of collections) {
-        const modelName = collection.name;
-        const Model = mongoose.model(modelName);
-  
-        await Model.deleteMany({});
-        console.log(`Deleted all documents in collection: ${modelName}`);
-      }
-  
-      console.log('All collections cleared.');
-    } catch (error) {
-      console.error('Error clearing collections:', error);
-    } 
-  };
-  
-  
+  try {
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
 
-module.exports = {connectToServer, clearAllCollections};
+    for (const collection of collections) {
+      const modelName = collection.name;
+      const Model = mongoose.model(modelName);
+
+      await Model.deleteMany({});
+      console.log(`Deleted all documents in collection: ${modelName}`);
+    }
+
+    console.log("All collections cleared.");
+  } catch (error) {
+    console.error("Error clearing collections:", error);
+  }
+};
+
+module.exports = { connectToServer, clearAllCollections };
