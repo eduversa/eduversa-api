@@ -34,11 +34,8 @@ const approveStudentAdmission = async (req, res) => {
     }
 
     student
-      .setPersonalInfo(applicant.personal_info)
-      .setAcademicInfo(applicant.academic_info)
-      .setFamilyInfo(applicant.family_info)
+      .fromApplicant(applicant)
       .setUserID(`1${applicant.user_id}`)
-      .setImage(applicant.image)
       .setCourseInfo(applicant.course_info)
       .setEnrollmentNumber(`1${applicant.user_id}`)
       .setRegistrationNumber(`304${applicant.user_id}`);
@@ -90,4 +87,19 @@ const approveStudentAdmission = async (req, res) => {
   }
 };
 
-module.exports = { approveStudentAdmission };
+const findAllStudents = async (req, res) => {
+  try {
+    const studentArray = await StudentCollection.find({});
+    res.status(200).send({
+      status: true,
+      message: `${studentArray.length} Students Found`,
+      data: studentArray,
+    });
+  } catch (error) {
+    console.log("Error in findAllStudents");
+    console.log(error);
+    res.send({ status: false, message: error });
+  }
+};
+
+module.exports = { approveStudentAdmission, findAllStudents };

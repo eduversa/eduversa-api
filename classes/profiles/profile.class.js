@@ -114,6 +114,7 @@ class Profile {
       aadhar_number,
       pan_number,
     } = data;
+
     this.setPersonalName(name)
       .setGender(gender)
       .setDOB(dob)

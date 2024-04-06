@@ -37,7 +37,8 @@ class Student extends Learner {
     this.course_info.current_year = "1";
     this.course_info.currrent_sem = "1";
     this.course_info.passout_year =
-      this.course_info.admission_year + this.course_info.duration;
+      parseInt(this.course_info.admission_year) +
+      parseInt(this.course_info.duration);
     this.course_info.total_sem = 2 * this.course_info.duration;
     return this;
   }
@@ -146,6 +147,16 @@ class Student extends Learner {
     } catch (error) {
       throw new BadRequestError("Applicant", "Update");
     }
+  }
+
+  fromApplicant(applicant) {
+    this.image = applicant.image;
+    this.user_id = applicant.user_id;
+    this.personal_info = applicant.personal_info;
+    this.academic_info = applicant.academic_info;
+    this.family_info = applicant.family_info;
+    // this.course_info = applicant.course_info;
+    return this;
   }
 }
 
