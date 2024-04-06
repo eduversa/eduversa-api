@@ -156,6 +156,7 @@ const studentCourseInfo = {
 //orange-f// Applicant Schema and Model
 const applicantSchema = mongoose.Schema(
   {
+    is_completely_filled: { type: Boolean, default: false },
     image: { type: String },
     user_id: { type: String },
     personal_info: personalInfoSchema,

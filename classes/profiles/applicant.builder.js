@@ -10,6 +10,7 @@ class Applicant extends Learner {
     stream: "",
     admission_year: "",
   };
+  is_completely_filled = false;
 
   constructor() {
     super();
@@ -17,6 +18,7 @@ class Applicant extends Learner {
     this.course_info.duration = "";
     this.course_info.stream = "";
     this.course_info.admission_year = `${new Date().getFullYear()}`;
+    this.is_completely_filled = false;
   }
 
   setCourseInfo(data) {
@@ -60,6 +62,8 @@ class Applicant extends Learner {
       this.course_info = applicantData.course_info;
       this.createdAt = applicantData.createdAt;
       this.updatedAt = applicantData.updatedAt;
+      this.is_completely_filled = applicantData.is_completely_filled;
+
       return this;
     } catch (error) {
       throw new NotFoundError("Applicant", "UserID", user_id);
@@ -86,6 +90,7 @@ class Applicant extends Learner {
       this.academic_info = applicantData.academic_info;
       this.family_info = applicantData.family_info;
       this.course_info = applicantData.course_info;
+      this.is_completely_filled = applicantData.is_completely_filled;
       return this;
     } catch (error) {
       throw new BadRequestError("Applicant", "Update");
@@ -101,6 +106,7 @@ class Applicant extends Learner {
         academic_info: this.academic_info,
         family_info: this.family_info,
         course_info: this.course_info,
+        is_completely_filled: this.is_completely_filled,
       });
       const savedApplicant = await data.save();
       this.image = savedApplicant.image;
@@ -109,6 +115,8 @@ class Applicant extends Learner {
       this.academic_info = savedApplicant.academic_info;
       this.family_info = savedApplicant.family_info;
       this.course_info = savedApplicant.course_info;
+      this.is_completely_filled = savedApplicant.is_completely_filled;
+
       return this;
     } catch (error) {
       throw new Error(error);
