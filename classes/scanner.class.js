@@ -9,24 +9,26 @@ class Scanner {
 
   constructor(input) {
     (this.type = input.type), (this.data = input.data);
+    console.log(this.data);
   }
 
   async processSecurityToken() {
     PrismLogger.log("security token");
     const student = new Student();
     const token = this.data.security_token;
-    const access_level = this.data.access_level;
-    const user_id = jwt.verify(token, process.env.SECURITY_TOKEN).user_id;
+    const accessLevel = this.data.accessLevel;
+    const user_id = jwt.verify(token, process.env.SECURITY_KEY).user_id;
 
     // student.setUserID(user_id)
     await student.findOneByStudentID(user_id);
+    console.log(student);
     let res = { status: true, message: "" };
-    switch (access_level) {
-      case ACCESS_LEVEL.ADMIN:
+    switch (accessLevel) {
+      case "4":
         res.message = "Student verified";
         res.data = student;
         break;
-      case ACCESS_LEVEL.FACULTY:
+      case "3":
         res.message = "Student verified";
         res.data = {
           personal_info: {
@@ -38,23 +40,24 @@ class Scanner {
         };
         break;
 
-      case ACCESS_LEVEL.STUDENT:
+      case "2":
         res.message = "Student verified";
         break;
       default:
+        console.log("object");
         break;
     }
 
-    return;
+    return res;
   }
   processAttendance() {
     PrismLogger.log("Attendance");
   }
 
-  processInput(req, res) {
+  async processInput(req, res) {
     switch (this.type) {
       case "security_token":
-        const result = this.processSecurityToken();
+        const result = await this.processSecurityToken();
         res.status(200).send(result);
         break;
       case "attendance":

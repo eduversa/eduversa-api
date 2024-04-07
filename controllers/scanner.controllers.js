@@ -5,7 +5,7 @@ const processScannedQR = async (req, res) => {
   try {
     console.log("processing");
     const scanner = new Scanner(req.body);
-    scanner.processInput();
+    await scanner.processInput(req, res);
   } catch (error) {
     PrismLogger.error("Error in processScannedQR");
     PrismLogger.error(error);

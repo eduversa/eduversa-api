@@ -6,10 +6,10 @@ const ROLES = {
 };
 
 const ACCESS_LEVEL = {
-  ADMIN: 4,
-  FACULTY: 3,
-  STUDENT: 2,
-  APPLICANT: 1,
+  ADMIN: "4",
+  FACULTY: "3",
+  STUDENT: "2",
+  APPLICANT: "1",
 };
 
 module.exports = { ROLES, ACCESS_LEVEL };
