@@ -151,11 +151,55 @@ class Account {
       throw new Error(error);
     }
   }
+  async update() {
+    try {
+      const data = {
+        security_token: this.security_token,
+        permissions: this.permissions,
+        first_name: this.first_name,
+        middle_name: this.middle_name,
+        last_name: this.last_name,
+        email: this.email,
+        user_id: this.user_id,
+        phone: this.phone,
+        password: this.password,
+        otp: this.otp,
+        type: this.type,
+        accessLevel: this.accessLevel,
+        tokens: this.tokens,
+      };
+
+      const savedAccount = await AccountCollection.findOneAndUpdate(
+        { user_id: this.user_id },
+        data,
+        { new: true }
+      );
+      this.permissions = savedAccount.permissions;
+      this.first_name = savedAccount.first_name;
+      this.middle_name = savedAccount.middle_name;
+      this.last_name = savedAccount.last_name;
+      this.email = savedAccount.email;
+      this.user_id = savedAccount.user_id;
+      this.phone = savedAccount.phone;
+      this.password = savedAccount.password;
+      this.otp = savedAccount.otp;
+      this.type = savedAccount.type;
+      this.accessLevel = savedAccount.accessLevel;
+      this.tokens = savedAccount.tokens;
+      return this;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   async findOne() {
     try {
+      console.log(this);
       const accountData = await AccountCollection.findOne({
-        $or: [{ userId: this.user_id }, { email: this.email }],
+        $or: [{ user_id: this.user_id }, { email: this.email }],
       });
+      // const accountData = await AccountCollection.findOne({
+      //   userId: this.user_id,
+      // });
       console.log(accountData);
       if (!accountData) {
         return false;

@@ -32,6 +32,7 @@ app.use(
       "https://www.eduversa.in",
       "https://vidit-eduversa.netlify.app",
       "https://eduversa-vidit.vercel.app",
+      "https://eduversa-git-ankur-eduversas-projects.vercel.app",
     ],
     methods: "GET,POST,PUT,DELETE,PATCH,UPDATE,HEAD",
     allowedHeaders:

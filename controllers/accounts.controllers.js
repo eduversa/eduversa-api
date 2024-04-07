@@ -24,9 +24,7 @@ const createNewAccount = async (req, res) => {
     const account = new Account();
     account.setEmail(email);
 
-    // const existingAccount = await AccountCollection.findOne({ email });
     if (await account.findOne()) {
-      // console.log("exists");
       return res
         .status(200)
         .send({ status: false, message: "Account already exists" });
@@ -37,8 +35,6 @@ const createNewAccount = async (req, res) => {
     await account.hashPassword();
     // console.log(account);
     await account.create();
-
-    //red-f// const password = genearatePassword();
 
     const applicant = new Applicant();
     applicant.setPersonalEmail(account.email);
@@ -104,59 +100,40 @@ const createNewAccountUsingSocialMedia = async (req, res) => {
         break;
     }
 
-    const existingAccount = await AccountCollection.findOne({ email });
-    if (existingAccount) {
+    const account = new Account();
+    account.setEmail(personal_info.email);
+
+    if (await account.findOne()) {
       return res
         .status(200)
         .send({ status: false, message: "Account already exists" });
     }
 
-    // const nameObject = formatName(name);
-    // if(!nameObject){
-    //     return res.status(200).send({status: false, message: "Invalid Name"})
-    // }
+    const password = account.password;
+    await account.hashPassword();
+    account.setSecurityToken().addAuthToken();
+    await account.create();
 
-    const user_id = generateUserID();
-    //red-f// const password = genearatePassword();
-    const password = "Test@1234";
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // const securityToken = jwt.sign({ email, user_id }, process.env.SECURITY_KEY);
-    const token = jwt.sign({ email, user_id }, process.env.SECRET_KEY);
-    const tokens = [{ token }];
-
-    const newAccount = new AccountCollection({
-      email,
-      user_id,
-      password: hashedPassword,
-      tokens,
-    });
-
-    const newApplicant = new ApplicantCollection({
-      personal_info: personal_info,
-      image: image,
-      user_id: user_id,
-    });
-    const addedApplicant = newApplicant.save();
+    const applicant = new Applicant();
+    applicant.personal_info = personal_info;
+    applicant.setImage(image).setUserID(account.user_id);
+    await applicant.create();
 
     const emailOptions = {
       from: process.env.GMAIL_EMAIL,
       to: email,
       subject: "EduVersa Account Creation Confirmation",
-      // text: `User ID: ${user_id}\nPassword: ${password}`,
       html: setCredentialsTemplate()
-        .replace("{{USER_ID}}", user_id)
+        .replace("{{USER_ID}}", account.user_id)
         .replace("{{PASSWORD}}", password),
     };
     sendEmail(emailOptions);
-    const addedAccount = await newAccount.save();
 
     res.status(200).send({
       status: true,
       message: "Account Creation Success",
-      data: addedAccount,
+      data: account,
     });
-    // console.log(newAccount);
   } catch (error) {
     console.log("Error in createNewAccountUsingSocialMedia");
     console.log(error);
@@ -164,6 +141,7 @@ const createNewAccountUsingSocialMedia = async (req, res) => {
   }
 };
 
+// TRY to refactor using the class later
 const getSingleAccount = async (req, res) => {
   try {
     const { query } = req.query;
@@ -314,42 +292,48 @@ const loginToAccount = async (req, res) => {
   try {
     const { user_id, password } = req.body;
 
-    const isExistingAccount = await AccountCollection.findOne({ user_id });
-    if (!isExistingAccount) {
+    const account = new Account();
+    account.setUserID(user_id);
+    const data = await account.findOne();
+
+    if (!data) {
       return res
         .status(200)
         .send({ status: false, message: "No Account Found" });
     }
 
-    const isPasswordVerified = await bcrypt.compare(
-      password,
-      isExistingAccount.password
-    );
+    // const isExistingAccount = await AccountCollection.findOne({ user_id });
+    // if (!isExistingAccount) {
+    // }
+
+    const isPasswordVerified = await bcrypt.compare(password, account.password);
     if (!isPasswordVerified) {
       return res
         .status(200)
         .send({ status: false, message: "Incorrect Credentials" });
     }
 
-    const token = jwt.sign(
-      { email: isExistingAccount.email, user_id: isExistingAccount.user_id },
-      process.env.SECRET_KEY
-    );
+    account.addAuthToken();
+    // const token = jwt.sign(
+    //   { email: isExistingAccount.email, user_id: isExistingAccount.user_id },
+    //   process.env.SECRET_KEY
+    // );
 
-    const tokens = isExistingAccount.tokens;
-    tokens.push({ token });
+    // const tokens = isExistingAccount.tokens;
+    // tokens.push({ token });
 
-    const updatedAccount = await AccountCollection.findOneAndUpdate(
-      { user_id },
-      { tokens },
-      { new: true }
-    );
+    await account.update();
+    // const updatedAccount = await AccountCollection.findOneAndUpdate(
+    //   { user_id },
+    //   { tokens },
+    //   { new: true }
+    // );
 
     let profileData;
-    switch (updatedAccount.type) {
+    switch (account.type) {
       case "applicant":
         profileData = await ApplicantCollection.findOne({
-          user_id: updatedAccount.user_id,
+          user_id: account.user_id,
         });
         break;
 
@@ -360,8 +344,8 @@ const loginToAccount = async (req, res) => {
     res.status(200).send({
       status: true,
       message: "Logged In Successfully",
-      data: updatedAccount,
-      authToken: token,
+      data: account,
+      authToken: account.tokens[account.tokens.length - 1].token,
       profileData: profileData,
     });
   } catch (error) {
@@ -400,11 +384,37 @@ const loginToAccountUsingSocialMedia = async (req, res) => {
         break;
     }
 
-    const isExistingAccount = await AccountCollection.findOne({ email });
-    if (!isExistingAccount) {
-      return res
-        .status(200)
-        .send({ status: false, message: "No Account Found" });
+    const account = new Account();
+    account.setEmail(email)
+
+    if (!await account.findOne()) {
+      account.setSecurityToken().addAuthToken();
+      const password = account.password;
+      await account.hashPassword();
+      // console.log(account);
+      await account.create();
+
+      const applicant = new Applicant();
+      applicant.setPersonalEmail(account.email);
+      applicant.setUserID(account.user_id);
+      await applicant.create();
+
+      const emailOptions = {
+        from: process.env.GMAIL_EMAIL,
+        to: account.email,
+        subject: "EduVersa Account Creation Confirmation",
+        // text: `User ID: ${user_id}\nPassword: ${password}`,
+        html: setCredentialsTemplate()
+          .replace("{{USER_ID}}", account.user_id)
+          .replace("{{PASSWORD}}", password),
+      };
+      sendEmail(emailOptions);
+
+      res.status(200).send({
+        status: true,
+        message: "Account Creation Success",
+        data: account,
+      });
     }
 
     const token = jwt.sign(

@@ -1,4 +1,5 @@
 // const Applicant = require("../classes/applicant.class");
+const Account = require("../classes/account.class");
 const Applicant = require("../classes/profiles/applicant.builder");
 const cloudinary = require("../config/cloudinary.config");
 const AccountCollection = require("../models/accounts.model");
@@ -27,6 +28,16 @@ const updateApplicant = async (req, res, next) => {
     switch (type) {
       case "personal":
         applicantData.setPersonalInfo(data).updateByUserID(user_id);
+        const account = new Account();
+        account.setUserID(applicantData.user_id);
+        await account.findOne();
+        account.setFirstName(applicantData.personal_info.first_name);
+        account.setLastName(applicantData.personal_info.last_name);
+        if (applicantData.personal_info.middle_name) {
+          account.setMiddleName(applicantData.personal_info.middle_namename);
+        }
+        account.setPhone(applicantData.personal_info.contact);
+        await account.update();
         break;
       case "academic":
         applicantData.setAcademicInfo(data).updateByUserID(user_id);

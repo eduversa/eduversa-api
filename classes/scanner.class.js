@@ -19,16 +19,14 @@ class Scanner {
     const accessLevel = this.data.accessLevel;
     const user_id = jwt.verify(token, process.env.SECURITY_KEY).user_id;
 
-    // student.setUserID(user_id)
     await student.findOneByStudentID(user_id);
-    console.log(student);
     let res = { status: true, message: "" };
     switch (accessLevel) {
-      case "4":
+      case ACCESS_LEVEL.ADMIN:
         res.message = "Student verified";
         res.data = student;
         break;
-      case "3":
+      case ACCESS_LEVEL.FACULTY:
         res.message = "Student verified";
         res.data = {
           personal_info: {
@@ -40,11 +38,11 @@ class Scanner {
         };
         break;
 
-      case "2":
+      case ACCESS_LEVEL.STUDENT:
         res.message = "Student verified";
         break;
       default:
-        console.log("object");
+        console.log("Unauthorized Access");
         break;
     }
 

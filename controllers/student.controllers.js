@@ -48,9 +48,9 @@ const approveStudentAdmission = async (req, res) => {
     // console.log(addedStudent);
 
     const deletedApplicant = await ApplicantCollection.findOneAndDelete({
-      user_id,
+      user_id: user_id,
     });
-
+    console.log(deletedApplicant);
     const updatedAccount = await AccountCollection.findOneAndUpdate(
       { user_id },
       {
@@ -68,15 +68,16 @@ const approveStudentAdmission = async (req, res) => {
       },
       { new: true }
     );
+    console.log(updatedAccount);
 
-    const emailOptions = {
-      from: process.env.GMAIL_EMAIL,
-      to: updatedAccount.email,
-      subject: "New User ID for your EduVersa Account",
-      text: `User ID: ${updatedAccount.user_id}`,
-    };
-    // console.log(emailOptions);
-    sendEmail(emailOptions);
+    // const emailOptions = {
+    //   from: process.env.GMAIL_EMAIL,
+    //   to: updatedAccount.email,
+    //   subject: "New User ID for your EduVersa Account",
+    //   text: `User ID: ${updatedAccount.user_id}`,
+    // };
+    // // console.log(emailOptions);
+    // sendEmail(emailOptions);
     res
       .status(200)
       .send({ status: true, message: "Applicant Approved", data: student });
