@@ -103,4 +103,53 @@ const findAllStudents = async (req, res) => {
   }
 };
 
-module.exports = { approveStudentAdmission, findAllStudents };
+const getOneStudent = async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    const student = await StudentCollection.findOne({ user_id });
+    if (!student) {
+      return res.status(400).send({
+        status: false,
+        message: `No Student Found`,
+      });
+    }
+    res.status(200).send({
+      status: true,
+      message: `Student Found Successfully`,
+      data: student,
+    });
+  } catch (error) {
+    console.log("Error in getOneStudent");
+    console.log(error);
+    res.send({ status: false, message: error });
+  }
+};
+
+const deleteOneStudent = async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    const student = await StudentCollection.findOneAndDelete({ user_id });
+    if (!student) {
+      return res.status(400).send({
+        status: false,
+        message: `No Student To Delete`,
+      });
+    }
+    res.status(200).send({
+      status: true,
+      message: `Student Deleted Successfully`,
+      data: student,
+    });
+  } catch (error) {
+    console.log("Error in getOneStudent");
+    console.log(error);
+    res.send({ status: false, message: error });
+  }
+};
+
+module.exports = {
+  approveStudentAdmission,
+  findAllStudents,
+  getOneStudent,
+  deleteOneStudent,
+};

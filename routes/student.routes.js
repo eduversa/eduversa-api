@@ -2,13 +2,17 @@ const express = require("express");
 const {
   approveStudentAdmission,
   findAllStudents,
+  deleteOneStudent,
+  getOneStudent,
 } = require("../controllers/student.controllers");
 
 const studentRouter = express.Router();
 
-studentRouter.get("/", (req, res) => {
+studentRouter.get("/test", (req, res) => {
   res.send("This Router is working");
 });
+
+studentRouter.route("/").get(getOneStudent).delete(deleteOneStudent);
 
 studentRouter.route("/approve").post(approveStudentAdmission);
 studentRouter.route("/find/all").get(findAllStudents);
@@ -27,6 +31,16 @@ studentRouter.get("/help", (req, res) => {
         method: "GET",
         route: "/student/find/all",
         desc: "gets all the student data into an array",
+      },
+      {
+        method: "GET",
+        route: "/student/?user_id={{user_id}}",
+        desc: "gets one student",
+      },
+      {
+        method: "DELETE",
+        route: "/student/?user_id={{user_id}}",
+        desc: "deletes one student",
       },
     ],
   });
