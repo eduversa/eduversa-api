@@ -9,7 +9,7 @@ class Scanner {
 
   constructor(input) {
     (this.type = input.type), (this.data = input.data);
-    console.log(this.data);
+    console.log("---->", this.data);
   }
 
   async processSecurityToken() {

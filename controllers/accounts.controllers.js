@@ -15,6 +15,7 @@ const {
   setUserIDTemplate,
 } = require("../functions/template.functions");
 const Account = require("../classes/account.class");
+// const { Applicant } = require("../patterns/builders");
 const Applicant = require("../classes/profiles/applicant.builder");
 
 const createNewAccount = async (req, res) => {
@@ -37,9 +38,11 @@ const createNewAccount = async (req, res) => {
     await account.create();
 
     const applicant = new Applicant();
+    // applicant.fromAccount(account);
     applicant.setPersonalEmail(account.email);
     applicant.setUserID(account.user_id);
     await applicant.create();
+    console.log(applicant);
 
     const emailOptions = {
       from: process.env.GMAIL_EMAIL,
@@ -385,9 +388,9 @@ const loginToAccountUsingSocialMedia = async (req, res) => {
     }
 
     const account = new Account();
-    account.setEmail(email)
+    account.setEmail(email);
 
-    if (!await account.findOne()) {
+    if (!(await account.findOne())) {
       account.setSecurityToken().addAuthToken();
       const password = account.password;
       await account.hashPassword();

@@ -9,11 +9,12 @@ const {
 
 const jwt = require("jsonwebtoken");
 
-const approveStudentAdmission = async (req, res) => {
+const approveStudentAdmission = async (req, res, next) => {
   try {
     const { user_id } = req.query;
 
     const student = new Student();
+    // if (await student.findOneByStudentID(1 + user_id)) {
     if (await student.findOneByStudentID(user_id)) {
       return res
         .status(200)
@@ -84,7 +85,8 @@ const approveStudentAdmission = async (req, res) => {
   } catch (error) {
     console.log("Error in createNewStudent");
     console.log(error);
-    res.send({ status: false, message: error });
+    next(error);
+    // res.send({ status: false, message: error });
   }
 };
 
