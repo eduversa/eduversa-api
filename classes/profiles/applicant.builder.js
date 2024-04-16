@@ -51,6 +51,26 @@ class Applicant extends Learner {
     return this;
   }
 
+  async delete(user_id) {
+    try {
+      const applicantData = await ApplicantCollection.findOneAndDelete({
+        user_id: user_id || this.user_id,
+      });
+      this.image = applicantData.image;
+      this.user_id = applicantData.user_id;
+      this.personal_info = applicantData.personal_info;
+      this.academic_info = applicantData.academic_info;
+      this.family_info = applicantData.family_info;
+      this.course_info = applicantData.course_info;
+      this.createdAt = applicantData.createdAt;
+      this.updatedAt = applicantData.updatedAt;
+      this.is_completely_filled = applicantData.is_completely_filled;
+
+      return this;
+    } catch (error) {
+      throw new NotFoundError("Applicant", "UserID", user_id);
+    }
+  }
   async findOneByUserID(user_id) {
     try {
       const applicantData = await ApplicantCollection.findOne({ user_id });

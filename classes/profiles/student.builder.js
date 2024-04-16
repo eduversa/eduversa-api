@@ -103,6 +103,27 @@ class Student extends Learner {
       throw new Error(error);
     }
   }
+  async delete(user_id) {
+    try {
+      const studentData = await StudentCollection.findOneAndDelete({
+        user_id: user_id || this.user_id,
+      });
+      // if (!studentData) {
+      //   return false;
+      // }
+      this.image = studentData.image;
+      this.user_id = studentData.user_id;
+      this.personal_info = studentData.personal_info;
+      this.academic_info = studentData.academic_info;
+      this.family_info = studentData.family_info;
+      this.course_info = studentData.course_info;
+      this.createdAt = studentData.createdAt;
+      this.updatedAt = studentData.updatedAt;
+      return this;
+    } catch (error) {
+      throw new NotFoundError("Student", "UserID", user_id);
+    }
+  }
   async findOneByStudentID(user_id) {
     try {
       const studentData = await StudentCollection.findOne({ user_id });

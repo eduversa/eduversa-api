@@ -222,6 +222,30 @@ class Account {
       throw new NotFoundError("Account", "UserID", user_id);
     }
   }
+
+  async delete(value) {
+    const deletedAccount = await AccountCollection.findOneAndDelete({
+      $or: [{ user_id: value || this.user_id }, { email: value || this.email }],
+    });
+
+    if (deletedAccount) {
+      this.security_token = deletedAccount.security_token;
+      this.permissions = deletedAccount.permissions;
+      this.first_name = deletedAccount.first_name;
+      this.middle_name = deletedAccount.middle_name;
+      this.last_name = deletedAccount.last_name;
+      this.email = deletedAccount.email;
+      this.user_id = deletedAccount.user_id;
+      this.phone = deletedAccount.phone;
+      this.password = deletedAccount.password;
+      this.otp = deletedAccount.otp;
+      this.type = deletedAccount.type;
+      this.accessLevel = deletedAccount.accessLevel;
+      this.tokens = deletedAccount.tokens;
+    }
+
+    return this;
+  }
 }
 
 module.exports = Account;

@@ -10,6 +10,7 @@ const {
   getUserID,
   loginToAccountUsingSocialMedia,
   createNewAccountUsingSocialMedia,
+  deleteSingleAccount,
 } = require("../controllers/accounts.controllers");
 const { isAuthorizedAccess } = require("../middlewares/auth.middlewares");
 
@@ -19,7 +20,11 @@ accountRouter.get("/test", (req, res) => {
   res.send("This Router is working");
 });
 
-accountRouter.route("/").post(createNewAccount).get(getSingleAccount);
+accountRouter
+  .route("/")
+  .post(createNewAccount)
+  .get(getSingleAccount)
+  .delete(deleteSingleAccount);
 
 accountRouter.route("/otp").put(generateOTP);
 
@@ -101,6 +106,11 @@ accountRouter.get("/help", (req, res) => {
         route: "/account/auth/platform?platform={{PLATFORM_NAME}}",
         desc: "logs into the account using any social platform",
         body: "{{SESSION_OBJECT}}",
+      },
+      {
+        method: "DELETE",
+        route: "/account/?query={{user_id or email}}",
+        desc: "Deletes one account along with the relevant profile",
       },
     ],
   });

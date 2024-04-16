@@ -17,6 +17,7 @@ const {
 const Account = require("../classes/account.class");
 // const { Applicant } = require("../patterns/builders");
 const Applicant = require("../classes/profiles/applicant.builder");
+const Student = require("../classes/profiles/student.builder");
 
 const createNewAccount = async (req, res) => {
   try {
@@ -536,6 +537,42 @@ const getUserID = async (req, res) => {
   }
 };
 
+const deleteSingleAccount = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const account = new Account();
+    await account.delete(query);
+
+    switch (account.type) {
+      case "applicant":
+        const applicant = new Applicant();
+        applicant.setUserID(account.user_id);
+        applicant.delete();
+
+        break;
+      case "student":
+        const student = new Student();
+        student.setUserID(account.user_id);
+        student.delete();
+
+        break;
+
+      default:
+        break;
+    }
+
+    res
+      .status(200)
+      .send({ status: true, message: "Account Deleted", data: account });
+  } catch (error) {
+    console.log("Error in deleteSingleAccount");
+    // console.log(error);
+    next(error);
+    // res.send({ status: false, message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createNewAccount,
   getSingleAccount,
@@ -549,4 +586,5 @@ module.exports = {
   getUserID,
   loginToAccountUsingSocialMedia,
   createNewAccountUsingSocialMedia,
+  deleteSingleAccount,
 };
