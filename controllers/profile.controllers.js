@@ -34,9 +34,10 @@ const updateApplicant = async (req, res, next) => {
         account.setFirstName(applicantData.personal_info.first_name);
         account.setLastName(applicantData.personal_info.last_name);
         if (applicantData.personal_info.middle_name) {
-          account.setMiddleName(applicantData.personal_info.middle_namename);
+          account.setMiddleName(applicantData.personal_info.middle_name);
         }
         account.setPhone(applicantData.personal_info.contact);
+        account.setEmail(applicantData.personal_info.email);
         await account.update();
         break;
       case "academic":
