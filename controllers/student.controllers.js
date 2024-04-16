@@ -1,3 +1,4 @@
+const Account = require("../classes/account.class");
 const Applicant = require("../classes/profiles/applicant.builder");
 const Student = require("../classes/profiles/student.builder");
 const { sendEmail } = require("../config/nodemailer.config");
@@ -130,13 +131,20 @@ const getOneStudent = async (req, res) => {
 const deleteOneStudent = async (req, res) => {
   try {
     const { user_id } = req.query;
-    const student = await StudentCollection.findOneAndDelete({ user_id });
-    if (!student) {
-      return res.status(400).send({
-        status: false,
-        message: `No Student To Delete`,
-      });
-    }
+    const student = new Student();
+    student.setUserID(user_id);
+    await student.delete();
+
+    const account = new Account();
+    account.setUserID(user_id);
+    await account.delete();
+    // const student = await StudentCollection.findOneAndDelete({ user_id });
+    // if (!student) {
+    //   return res.status(400).send({
+    //     status: false,
+    //     message: `No Student To Delete`,
+    //   });
+    // }
     res.status(200).send({
       status: true,
       message: `Student Deleted Successfully`,
