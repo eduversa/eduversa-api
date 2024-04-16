@@ -356,7 +356,7 @@ class Learner extends Profile {
   setAggregate(type, name) {
     this.isValidExamType(type);
     validate.isEmpty(name, "Academic Information", type + " Aggregate");
-    this.academic_info[type].board = name;
+    this.academic_info[type].aggregate = name;
     return this;
   }
   // school_name: "",
