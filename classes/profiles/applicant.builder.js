@@ -30,6 +30,10 @@ class Applicant extends Learner {
     return this;
   }
 
+  setIsCompletelyFilled(value) {
+    this.is_completely_filled = value;
+    return this;
+  }
   setCourseName(name) {
     validate.isEmpty(name, "Applicant Profile", "Course Name");
     this.course_info.course_name = name;

@@ -72,7 +72,7 @@ const updateApplicant = async (req, res, next) => {
             // fs.unlinkSync(filePath);
 
             // return res.status(200).json({ message: 'File uploaded to Cloudinary successfully' });
-            applicantData.is_completely_filled = true;
+            applicantData.setIsCompletelyFilled(true);
             applicantData.setImage(result.url).updateByUserID(user_id);
           }
         );
