@@ -27,5 +27,8 @@
     "url": "git@git_universa:eduversa/eduversa-api.git"
   },
   "author": "Vidit Modi",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
 }
