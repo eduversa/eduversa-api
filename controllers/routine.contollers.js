@@ -1,3 +1,4 @@
+const RoutinePeriodCollection = require("../models/routineperiod.model");
 const RoutinePeriod = require("../patterns/builders/RoutinePeriod.builder");
 
 
@@ -19,7 +20,23 @@ const createNewRoutine = async (req, res)=>{
             })
         })
     } catch (error) {
-        console.log("Error in functionName")
+        console.log("Error in createNewRoutine")
+        res.send({status: false, message: error})
+    }
+}
+
+const getRoutine = async (req, res)=>{
+    try {
+        const {year, section, stream, course} = req.query;
+        const id = year+"/"+course.toUpperCase()+"/"+stream.toUpperCase()+"/"+section.toUpperCase();
+        console.log(id)
+        const monday = await RoutinePeriodCollection.find({id, day: "monday"});
+        const routineData = {
+            monday
+        }
+        res.status(200).send({status: true, message: "got a routine", data: routineData})
+    } catch (error) {
+        console.log("Error in getRoutine")
         res.send({status: false, message: error})
     }
 }
@@ -27,4 +44,4 @@ const createNewRoutine = async (req, res)=>{
 
 
 
-module.exports = {createNewRoutine}
+module.exports = {createNewRoutine, getRoutine}

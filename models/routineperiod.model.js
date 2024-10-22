@@ -23,6 +23,6 @@ const routinePeriodSchema = mongoose.Schema(
   }
 );
 
-const RoutinePeriodCollection = mongoose.model("-data", routinePeriodSchema);
+const RoutinePeriodCollection = mongoose.model("routine-period-data", routinePeriodSchema);
 
 module.exports = RoutinePeriodCollection;

@@ -261,36 +261,36 @@ const generateOTP = async (req, res) => {
   }
 };
 
-const verifyOTP = async (req, res, next) => {
-  try {
-    const { query, otp } = req.query;
+// const verifyOTP = async (req, res, next) => {
+//   try {
+//     const { query, otp } = req.query;
 
-    // const {query}=req.query;
-    const isExistingAccount = await AccountCollection.findOne({
-      $or: [{ email: query }, { user_id: query }],
-    });
-    // console.log(isExistingAccount)
-    if (!isExistingAccount) {
-      return res
-        .status(200)
-        .send({ status: false, message: "No Account Found" });
-    }
+//     // const {query}=req.query;
+//     const isExistingAccount = await AccountCollection.findOne({
+//       $or: [{ email: query }, { user_id: query }],
+//     });
+//     // console.log(isExistingAccount)
+//     if (!isExistingAccount) {
+//       return res
+//         .status(200)
+//         .send({ status: false, message: "No Account Found" });
+//     }
 
-    if (isExistingAccount.otp !== otp) {
-      return res.status(200).send({ status: false, message: "Invalid OTP" });
-    }
+//     if (isExistingAccount.otp !== otp) {
+//       return res.status(200).send({ status: false, message: "Invalid OTP" });
+//     }
 
-    //red-f// UNCOMMENT Later
-    // const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {otp: null}, {new: true})
-    // console.log(updatedAccount)
-    req.params.isOTPVerified = true;
-    next();
-  } catch (error) {
-    console.log("Error in verifyOTP");
-    console.log(error);
-    res.send({ status: false, message: "Internal Server Error" });
-  }
-};
+//     //red-f// UNCOMMENT Later
+//     // const updatedAccount = await AccountCollection.findOneAndUpdate({user_id}, {otp: null}, {new: true})
+//     // console.log(updatedAccount)
+//     req.params.isOTPVerified = true;
+//     next();
+//   } catch (error) {
+//     console.log("Error in verifyOTP");
+//     console.log(error);
+//     res.send({ status: false, message: "Internal Server Error" });
+//   }
+// };
 
 const loginToAccount = async (req, res) => {
   try {

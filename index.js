@@ -11,6 +11,9 @@ const { handleError } = require("./middlewares/error.middlewares");
 const scannerRouter = require("./routes/scanner.routes");
 const routineRouter = require("./routes/routine.routes");
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger.config');
+
 const app = express();
 const port = process.env.PORT;
 
@@ -41,11 +44,14 @@ app.use(
     credentials: true,
   })
 );
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //yellow-f// DEFAULT ROUTE START
 app.head("/", (req, res) => {
   console.log("Uptime Robot Hit");
 });
+
+
 app.get("/connection", async (req, res) => {
   res.send("API is working");
 });
