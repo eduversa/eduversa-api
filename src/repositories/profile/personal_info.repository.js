@@ -160,8 +160,11 @@ class PersonalInfo {
     }
 
     setData(data) {
-      const {
+      let {
         name,
+        first_name,
+        middle_name,
+        last_name,
         gender,
         dob,
         present_address,
@@ -175,7 +178,12 @@ class PersonalInfo {
         pan_number,
       } = data;
 
-      const { first_name, middle_name, last_name } = Parser.parseName(name);
+      if (name) {
+        const nameObj = Parser.parseName(name);
+        first_name = nameObj.first_name;
+        middle_name = nameObj.middle_name;
+        last_name = nameObj.last_name;
+      }
 
       if (first_name) {
         this.setFirstName(first_name);
