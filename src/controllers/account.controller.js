@@ -168,15 +168,13 @@ class AccountController {
       // console.log(response);
       // response.send();
 
-      res
-        .status(200)
-        .send({
-          status: true,
-          message: "Logged In Successfully",
-          data: account,
-          authToken: token,
-          profileData: profile,
-        });
+      res.status(200).send({
+        status: true,
+        message: "Logged In Successfully",
+        data: account,
+        authToken: token,
+        profileData: profile,
+      });
     } catch (error) {
       console.log("Error - AccountController - logIntoAccount");
       next(error);
@@ -252,10 +250,22 @@ class AccountController {
       );
 
       // TODO: Send EMail
-      new Response.Ok(res)
-        .setMessage("Logged In Successfully")
-        .setData({ account, authToken: token, profileData: applicant })
-        .send();
+      // TODO: Make Response class working for this
+      // const response = new Response.Ok(res)
+      //   .setMessage("Logged In Successfully")
+      //   .setData(account);
+      // response.authToken = token;
+      // response.profileData = profile;
+      // console.log(response);
+      // response.send();
+
+      res.status(200).send({
+        status: true,
+        message: "Logged In Successfully",
+        data: account,
+        authToken: token,
+        profileData: profile,
+      });
     } catch (error) {
       console.log("Error - AccountController - logIntoAccountUsingSocialMedia");
     }
