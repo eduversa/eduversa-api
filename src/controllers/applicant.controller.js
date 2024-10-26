@@ -28,8 +28,8 @@ class ApplicantController {
   // Done
   static readApplicantByUserId = async (req, res, next) => {
     try {
-      const query = req.query.query;
-      const applicant = await ApplicantService.readApplicantByUserId(query);
+      const user_id = req.query.user_id;
+      const applicant = await ApplicantService.readApplicantByUserId(user_id);
 
       new Response.Ok(res)
         .setMessage("Applicant Found")
@@ -57,8 +57,8 @@ class ApplicantController {
   // Done
   static deleteApplicantByUserID = async (req, res, next) => {
     try {
-      const query = req.query.query;
-      const applicant = await ApplicantService.deleteApplicantByUserId(query);
+      const user_id = req.query.user_id;
+      const applicant = await ApplicantService.deleteApplicantByUserId(user_id);
 
       new Response.Ok(res)
         .setMessage("Applicant Deleted")
