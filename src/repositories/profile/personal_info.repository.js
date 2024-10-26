@@ -1,3 +1,5 @@
+const { Parser } = require("../../helpers");
+
 class PersonalInfo {
   first_name = null;
   middle_name = null;
@@ -159,9 +161,7 @@ class PersonalInfo {
 
     setData(data) {
       const {
-        first_name,
-        middle_name,
-        last_name,
+        name,
         gender,
         dob,
         present_address,
@@ -174,6 +174,8 @@ class PersonalInfo {
         aadhar_number,
         pan_number,
       } = data;
+
+      const { first_name, middle_name, last_name } = Parser.parseName(name);
 
       if (first_name) {
         this.setFirstName(first_name);
