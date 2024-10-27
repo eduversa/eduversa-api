@@ -1,13 +1,17 @@
 const { HTTP_STATUS } = require("../data");
 const { Response, MailSender, Parser } = require("../helpers");
-const { AccountService, ApplicantService } = require("../services");
+const {
+  AccountService,
+  ApplicantService,
+  FacultyService,
+} = require("../services");
 
 class AccountController {
   static testRoute = async (req, res, next) => {
     res.send("This Router is Working");
   };
 
-  // Pending (Done for applicant)
+  // Pending (Done for applicant, faculty)
   static createNewAccount = async (req, res, next) => {
     try {
       // get data from request
@@ -34,7 +38,7 @@ class AccountController {
           console.log("Student Profile Not Implemented");
           break;
         case "faculty":
-          console.log("Faculty Profile Not Implemented");
+          profile = await FacultyService.createNewFacultyUsingAccount(account);
           break;
         case "admin":
           console.log("Admin Profile Not Implemented");

@@ -11,6 +11,7 @@ const {
   StudentRouter,
   CollegeRouter,
   ScannerRouter,
+  FacultyRouter,
 } = require("./src/routers");
 class App {
   app = express();
@@ -67,6 +68,7 @@ class App {
           "/college/help",
           "/student/help",
           "/permission/help",
+          "/faculty/help",
         ],
       });
     });
@@ -77,6 +79,7 @@ class App {
     this.app.use("/student", new StudentRouter().configure().getRouter());
     this.app.use("/college", new CollegeRouter().configure().getRouter());
     this.app.use("/scanner", new ScannerRouter().configure().getRouter());
+    this.app.use("/faculty", new FacultyRouter().configure().getRouter());
     // Section: Error Handlers
     this.app.use(handleError);
   }

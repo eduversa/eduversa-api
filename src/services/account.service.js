@@ -5,11 +5,9 @@ const { AccountRepository } = require("../repositories");
 class AccountService {
   static createNewAccount = async (email, type) => {
     try {
-      let role = null;
-      if (type) {
-        role = ROLES.filter((element) => element.TYPE == type)[0];
-      } else {
-        role = ROLES.filter((element) => element.TYPE == "applicant")[0];
+      let role = ROLES[type.toUpperCase()];
+      if (!type) {
+        role = ROLES.APPLICANT;
       }
       const account = new AccountRepository.Builder()
         .setDefault()

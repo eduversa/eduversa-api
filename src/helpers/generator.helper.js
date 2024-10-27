@@ -30,6 +30,9 @@ class Generator {
   static getOtp = () => {
     return "12345678";
   };
+  static getFacultyId = () => {
+    return `F${this.getRandomNumber(3)}`;
+  };
   static getUserId = () => {
     return `${new Date().getFullYear()}00${this.getRandomNumber(5)}`;
   };
