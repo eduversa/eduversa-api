@@ -4,6 +4,7 @@ const CollegeController = require("./college.controller");
 const FacultyController = require("./faculty.controller");
 const ScannerController = require("./scanner.controller");
 const StudentController = require("./student.controller");
+const SubjectController = require("./subject.controller");
 
 module.exports = {
   AccountController,
@@ -12,4 +13,5 @@ module.exports = {
   CollegeController,
   ScannerController,
   FacultyController,
+  SubjectController,
 };

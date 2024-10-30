@@ -105,9 +105,6 @@ class AccountRepository {
     }
   };
   async read(query = {}) {
-    const test = {
-      $or: [{ email: query || this.email }, { user_id: query || this.user_id }],
-    };
     try {
       const account = await AccountModel.findOne(query);
       if (!account) return false;

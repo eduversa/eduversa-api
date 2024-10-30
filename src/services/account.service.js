@@ -113,9 +113,13 @@ class AccountService {
   };
   static logIntoAccount = async (user_id, password) => {
     try {
-      const existingAccount = await new AccountRepository().mustExist({
+      const existingAccount = await new AccountRepository().read({
         user_id,
       });
+
+      if (!existingAccount) {
+        throw new Error("Incorrect Credentials");
+      }
 
       await existingAccount.verifyPassword(password);
 
