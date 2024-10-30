@@ -50,9 +50,22 @@ class AccountRouter extends BaseRouter {
         data: [
           {
             method: "POST",
-            route: "/account/",
+            route: "/account?type={{account_type}}",
             desc: "create new account, email sent",
             body: ["email"],
+            info: {
+              header: "send auth token for any type other than applicant",
+            },
+          },
+          {
+            NOTE: "ONLY FOR POSTMAN",
+            method: "POST",
+            route: "/account/dev?type={{account_type}}",
+            desc: "create new account, email sent",
+            body: ["email", "passkey"],
+            info: {
+              body: "passkey value 'EduversaDev@1'",
+            },
           },
           {
             method: "GET",
