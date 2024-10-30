@@ -1,10 +1,13 @@
+const { Response } = require("../helpers");
+
 const handleError = (error, req, res, next) => {
   try {
     console.log(error);
-    res.status(error.status || 400).send({
-      status: false,
-      message: error.message || "Internal Server Error",
-    });
+
+    new Response.Custom(res)
+      .setStatusCode(error.status || 400)
+      .setMessage(error.message || "Internal Server Error")
+      .send();
   } catch (err) {
     console.log("Error -> " + err);
   }

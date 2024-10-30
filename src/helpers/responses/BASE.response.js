@@ -22,6 +22,7 @@ class BaseResponse {
   }
   send() {
     this.res.status(this.code).send({
+      code: this.code,
       status: this.code >= 200 && this.code < 300,
       message: this.message,
       data: this.data,

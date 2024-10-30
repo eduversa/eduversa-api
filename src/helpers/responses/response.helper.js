@@ -2,6 +2,12 @@ const { HTTP_STATUS } = require("../../data");
 const BaseResponse = require("./BASE.response");
 
 class Response {
+  static Custom = class extends BaseResponse {
+    constructor(res) {
+      super();
+      this.setResObject(res);
+    }
+  };
   static Ok = class extends BaseResponse {
     constructor(res) {
       super();
