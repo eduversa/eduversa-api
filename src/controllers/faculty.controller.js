@@ -70,19 +70,35 @@ class FacultyController {
       next(error);
     }
   };
-  // Pending
+  // Done
   static updateFaculty = async (req, res, next) => {
     try {
-      new Response.Ok(res).setMessage("Not Implemented").send();
+      const { user_id, type } = req.query;
+      const data = req.body;
+      if (req.file) {
+        data = req.file;
+      }
+
+      const faculty = await FacultyService.updateFacultyByType(
+        type,
+        user_id,
+        data
+      );
+      new Response.Created(res)
+        .setMessage("Faculty updated Successfully")
+        .setData(faculty)
+        .send();
     } catch (error) {
       console.log("Error - FacultyController - Update faculty");
       next(error);
     }
   };
-  // Pending
+  // Done
   static deleteOneFaculty = async (req, res, next) => {
     try {
-      new Response.Ok(res).setMessage("Not Implemented").send();
+      const user_id = req.query.user_id;
+      const faculty = await FacultyService.deleteFacultyByUserId(user_id);
+      new Response.Ok(res).setMessage("Faculty Deleted").send();
     } catch (error) {
       console.log("Error - FacultyController - Delete One faculty");
       next(error);

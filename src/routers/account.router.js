@@ -5,6 +5,7 @@ const BaseRouter = require("./BASE.router");
 class AccountRouter extends BaseRouter {
   configure() {
     this.router.get("/test", AccountController.testRoute);
+    this.router.post("/dev", AccountController.createNewAccountWithoutToken);
     // Route - /
     this.router.post("/", AccountController.createNewAccount);
     this.router.get("/", AccountController.getSingleAccount);

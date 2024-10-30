@@ -1,9 +1,10 @@
-const { HTTP_STATUS } = require("../data");
+const { HTTP_STATUS, ROLES } = require("../data");
 const { Response, MailSender, Parser } = require("../helpers");
 const {
   AccountService,
   ApplicantService,
   FacultyService,
+  AuthenticationService,
 } = require("../services");
 
 class AccountController {
@@ -12,12 +13,85 @@ class AccountController {
   };
 
   // Pending (Done for applicant, faculty)
+  static createNewAccountWithoutToken = async (req, res, next) => {
+    try {
+      // get data from request
+      const { email, passkey } = req.body;
+      if (passkey !== "EduversaDev@1") {
+        throw new Error("Invalid Passkey");
+      }
+      let type = req.query.type;
+      type = type ? type : "applicant";
+
+      // create new account
+      const { account, password } = await AccountService.createNewAccount(
+        email,
+        type
+      );
+
+      // create new profile based on account type
+      let profile = null;
+      // TODO: create a profile for the type of account created
+      switch (type) {
+        case "applicant":
+          profile = await ApplicantService.createNewApplicantUsingAccount(
+            account
+          );
+          break;
+        case "student":
+          console.log("Student Profile Not Implemented");
+          break;
+        case "faculty":
+          profile = await FacultyService.createNewFacultyUsingAccount(account);
+          break;
+        case "admin":
+          console.log("Admin Profile Not Implemented");
+          break;
+        case "superadmin":
+          console.log("SuperAdmin Profile Not Implemented");
+          break;
+
+        default:
+          break;
+      }
+      new MailSender.UserIdPasswordMail()
+        .setDestinationEmail(account.email)
+        .setSubject("Eduversa Account Creation Verification")
+        .setContent({ user_id: account.user_id, password })
+        .send();
+
+      new Response.Created(res)
+        .setMessage("Account Created Successfully")
+        .setData(account)
+        .send();
+    } catch (error) {
+      console.log("Error - AccountController - CreateNewAccount");
+      next(error);
+    }
+  };
+  // Pending (Done for applicant, faculty)
   static createNewAccount = async (req, res, next) => {
     try {
       // get data from request
       const email = req.body.email;
       let type = req.query.type;
       type = type ? type : "applicant";
+
+      if (type !== "applicant") {
+        const accountFromToken =
+          await AuthenticationService.getAccountFromToken(
+            req.headers.authorization
+          );
+
+        if (
+          !(await AuthenticationService.checkAccessLevel(
+            accountFromToken,
+            ROLES.ADMIN.ACCESS_LEVEL
+          ))
+        ) {
+          throw new Error("Not Allowed");
+        }
+      }
 
       // create new account
       const { account, password } = await AccountService.createNewAccount(
@@ -116,6 +190,7 @@ class AccountController {
         .send();
     } catch (error) {
       console.log("Error - AccountController - generateOtp");
+      next(error);
     }
   };
   // Done
@@ -141,6 +216,7 @@ class AccountController {
         .send();
     } catch (error) {
       console.log("Error - AccountController - getUserId");
+      next(error);
     }
   };
   // Done

@@ -3,7 +3,7 @@ const handleError = (error, req, res, next) => {
     console.log(error);
     res.status(error.status || 400).send({
       status: false,
-      message: error.message || "Internal Server Error 1234",
+      message: error.message || "Internal Server Error",
     });
   } catch (err) {
     console.log("Error -> " + err);

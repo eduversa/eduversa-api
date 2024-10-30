@@ -1,5 +1,6 @@
 const AccountService = require("./account.service");
 const ApplicantService = require("./applicant.service");
+const AuthenticationService = require("./authentication.service");
 const CollegeService = require("./college.service");
 const FacultyService = require("./faculty.service");
 const ScannerService = require("./scanner.service");
@@ -12,4 +13,5 @@ module.exports = {
   CollegeService,
   ScannerService,
   FacultyService,
+  AuthenticationService,
 };
