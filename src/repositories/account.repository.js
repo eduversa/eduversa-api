@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { Generator } = require("../helpers");
+const { Generator, ClientError } = require("../helpers");
 const AccountModel = require("../models/account.model");
 class AccountRepository {
   security_token;
@@ -48,7 +48,7 @@ class AccountRepository {
   async verifyPassword(password) {
     try {
       if (!(await bcrypt.compare(password, this.password))) {
-        throw new Error("Incorrect Credentials");
+        throw new ClientError.Unauthorized("Incorrect Credentials");
       }
     } catch (error) {
       console.log("Error - AccountRepository - VerifyPassword");
@@ -58,7 +58,7 @@ class AccountRepository {
   async verifyOtp(otp) {
     try {
       if (otp !== this.otp) {
-        throw new Error("Invalid OTP");
+        throw new ClientError.Unauthorized("Invalid OTP");
       }
       return this;
     } catch (error) {
@@ -117,10 +117,11 @@ class AccountRepository {
     }
   }
 
-  async mustExist(query = {}) {
+  async mustExist(query = {}, err) {
     try {
       const account = await AccountModel.findOne(query);
-      if (!account) throw new Error("Account does not exist");
+      if (!account)
+        throw err ? err : new ClientError.NotFound("Account does not exist");
       this.setAccountData(account);
       //   console.log("Account Read: " + this.email);
       return this;
@@ -132,7 +133,7 @@ class AccountRepository {
   async mustNotExist(query = {}) {
     try {
       const account = await AccountModel.findOne(query);
-      if (account) throw new Error("Account already exists");
+      if (account) throw new ClientError.Conflict("Account already exists");
     } catch (error) {
       console.log("Error - Account Builder - Must Not Exist");
       throw error;

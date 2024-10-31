@@ -4,13 +4,17 @@ const jwt = require("jsonwebtoken");
 class AuthenticationService {
   static getAccountFromToken = async (token) => {
     try {
+      console.log("Running Token Authentication");
       if (!token) {
         throw new Error("No Token Found");
       }
 
-      const account = await new AccountRepository().mustExist({
-        "tokens.token": token,
-      });
+      const account = await new AccountRepository().mustExist(
+        {
+          "tokens.token": token,
+        },
+        new Error("Invalid Token Error")
+      );
 
       const tokenData = jwt.verify(token, process.env.SECRET_KEY);
 
@@ -26,6 +30,7 @@ class AuthenticationService {
   };
   static checkAccessLevel = async (account, access_level) => {
     try {
+      console.log("Running Access Authorization");
       if (!account) {
         throw new Error("Please Login First");
       }

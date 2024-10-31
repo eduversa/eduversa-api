@@ -50,6 +50,12 @@ class App {
     // TODO: Uncomment Later
     // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+    this.app.use((req, res, next) => {
+      console.log("==========================================");
+      console.log(`Request: ${req.method} ${req.url}`);
+      console.log("------------------------------------------");
+      next();
+    });
     // Section: Default Routes
     this.app.head("/", (req, res) => {
       console.log("Uptime Robot Hit");

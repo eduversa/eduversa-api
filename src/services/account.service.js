@@ -116,6 +116,7 @@ class AccountService {
       const existingAccount = await new AccountRepository().read({
         user_id,
       });
+      // console.log(existingAccount);
 
       if (!existingAccount) {
         throw new Error("Incorrect Credentials");

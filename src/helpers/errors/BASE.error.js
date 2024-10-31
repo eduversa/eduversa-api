@@ -1,9 +1,11 @@
 const { HTTP_STATUS } = require("../../data");
 class BaseError extends Error {
   statusCode = null;
-  constructor(code, message) {
+  type = null;
+  constructor({ code, message, type }) {
     super(message);
     this.statusCode = code || HTTP_STATUS.INTERNAL_SERVER_ERROR;
+    this.type = type || "Server Error";
   }
 
   getMessage() {
@@ -11,6 +13,9 @@ class BaseError extends Error {
   }
   getStatusCode() {
     return this.code;
+  }
+  getType() {
+    return this.type;
   }
 }
 
