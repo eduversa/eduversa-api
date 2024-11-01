@@ -239,22 +239,12 @@ class AccountController {
           break;
       }
 
-      // TODO: Make Response class working for this
-      // const response = new Response.Ok(res)
-      //   .setMessage("Logged In Successfully")
-      //   .setData(account);
-      // response.authToken = token;
-      // response.profileData = profile;
-      // console.log(response);
-      // response.send();
-
-      res.status(200).send({
-        status: true,
-        message: "Logged In Successfully",
-        data: account,
-        authToken: token,
-        profileData: profile,
-      });
+      const response = new Response.Ok(res)
+        .setMessage("Logged In Successfully")
+        .setData(account)
+        .setAttribute("authToken", token)
+        .setAttribute("profileData", profile)
+        .send();
     } catch (error) {
       console.log("Error - AccountController - logIntoAccount");
       next(error);
@@ -330,22 +320,12 @@ class AccountController {
       );
 
       // TODO: Send EMail
-      // TODO: Make Response class working for this
-      // const response = new Response.Ok(res)
-      //   .setMessage("Logged In Successfully")
-      //   .setData(account);
-      // response.authToken = token;
-      // response.profileData = profile;
-      // console.log(response);
-      // response.send();
-
-      res.status(200).send({
-        status: true,
-        message: "Logged In Successfully",
-        data: account,
-        authToken: token,
-        profileData: profile,
-      });
+      const response = new Response.Ok(res)
+        .setMessage("Logged In Successfully")
+        .setData(account)
+        .setAttribute("authToken", token)
+        .setAttribute("profileData", profile)
+        .send();
     } catch (error) {
       console.log("Error - AccountController - logIntoAccountUsingSocialMedia");
     }

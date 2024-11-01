@@ -7,8 +7,8 @@ class Database {
   constructor() {
     this.name = process.env.DB_NAME;
     this.uri = process.env.MONGODB_URI.replace("{{DB_NAME}}", this.name);
-    console.log("Creating New Database: ");
     console.log("Database Name: " + this.name);
+    console.log("Creating New Database...");
   }
 
   async connect() {

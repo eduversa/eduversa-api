@@ -1,3 +1,5 @@
+const { Parser } = require("../../helpers");
+
 class FamilyInfo {
   father = {
     first_name: null,
@@ -205,7 +207,14 @@ class FamilyInfo {
     }
 
     setFatherData(father) {
-      const { first_name, middle_name, last_name, email, contact } = father;
+      const { first_name, middle_name, last_name, name, email, contact } =
+        father;
+      if (name) {
+        const nameObj = Parser.parseName(name);
+        first_name = nameObj.first_name;
+        middle_name = nameObj.middle_name;
+        last_name = nameObj.last_name;
+      }
 
       if (first_name) {
         this.father.first_name = first_name;
@@ -225,8 +234,14 @@ class FamilyInfo {
       return this;
     }
     setMotherData(mother) {
-      const { first_name, middle_name, last_name, email, contact } = mother;
-
+      const { first_name, middle_name, last_name, name, email, contact } =
+        mother;
+      if (name) {
+        const nameObj = Parser.parseName(name);
+        first_name = nameObj.first_name;
+        middle_name = nameObj.middle_name;
+        last_name = nameObj.last_name;
+      }
       if (first_name) {
         this.mother.first_name = first_name;
       }
@@ -249,6 +264,7 @@ class FamilyInfo {
         first_name,
         middle_name,
         last_name,
+        name,
         relation,
         office_address,
         occupation,
@@ -260,7 +276,12 @@ class FamilyInfo {
         pan_number,
         aadhar_number,
       } = guardian;
-
+      if (name) {
+        const nameObj = Parser.parseName(name);
+        first_name = nameObj.first_name;
+        middle_name = nameObj.middle_name;
+        last_name = nameObj.last_name;
+      }
       if (first_name) {
         this.guardian.first_name = first_name;
       }

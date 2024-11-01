@@ -5,6 +5,7 @@ const CollegeRouter = require("./college.router");
 const ScannerRouter = require("./scanner.router");
 const FacultyRouter = require("./faculty.router");
 const SubjectRouter = require("./subject.router");
+const RoomRouter = require("./room.router");
 
 module.exports = {
   AccountRouter,
@@ -14,4 +15,5 @@ module.exports = {
   ScannerRouter,
   FacultyRouter,
   SubjectRouter,
+  RoomRouter,
 };

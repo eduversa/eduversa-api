@@ -36,6 +36,9 @@ class Generator {
   static getSubjectId = () => {
     return `S${this.getRandomNumber(3)}`;
   };
+  static getRoomId = () => {
+    return `R${this.getRandomNumber(3)}`;
+  };
   static getUserId = () => {
     return `${new Date().getFullYear()}00${this.getRandomNumber(5)}`;
   };
