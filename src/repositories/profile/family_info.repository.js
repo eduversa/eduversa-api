@@ -207,8 +207,7 @@ class FamilyInfo {
     }
 
     setFatherData(father) {
-      const { first_name, middle_name, last_name, name, email, contact } =
-        father;
+      let { first_name, middle_name, last_name, name, email, contact } = father;
       if (name) {
         const nameObj = Parser.parseName(name);
         first_name = nameObj.first_name;
@@ -234,8 +233,7 @@ class FamilyInfo {
       return this;
     }
     setMotherData(mother) {
-      const { first_name, middle_name, last_name, name, email, contact } =
-        mother;
+      let { first_name, middle_name, last_name, name, email, contact } = mother;
       if (name) {
         const nameObj = Parser.parseName(name);
         first_name = nameObj.first_name;
@@ -260,7 +258,7 @@ class FamilyInfo {
       return this;
     }
     setGuardianData(guardian) {
-      const {
+      let {
         first_name,
         middle_name,
         last_name,
