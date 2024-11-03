@@ -77,20 +77,20 @@ class AccountService {
       throw error;
     }
   };
-  static changeAccountType = async (user_id, access_level) => {
+  static changeAccountType = async (user_id, type) => {
     try {
       const existingAccount = await new AccountRepository().mustExist({
         user_id,
       });
 
       const account = new AccountRepository.Builder(existingAccount)
-        .setType(ROLES[access_level - 1].TYPE)
-        .setAccessLevel(ROLES[access_level - 1].ACCESS_LEVEL)
+        .setType(ROLES[type.toUpperCase()].TYPE)
+        .setAccessLevel(ROLES[type.toUpperCase()].ACCESS_LEVEL)
         .build();
       await account.update({ user_id: account.user_id });
       return account.getPublicData();
     } catch (error) {
-      console.log("Error - Account Service - Change Password");
+      console.log("Error - Account Service - Change Account Type");
       throw error;
     }
   };

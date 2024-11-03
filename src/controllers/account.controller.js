@@ -5,6 +5,7 @@ const {
   ApplicantService,
   FacultyService,
   AuthenticationService,
+  StudentService,
 } = require("../services");
 
 class AccountController {
@@ -233,6 +234,19 @@ class AccountController {
           profile = await ApplicantService.readApplicantByUserId(
             account.user_id
           );
+          break;
+        case "student":
+          profile = await StudentService.getStudentUsingUserId(account.user_id);
+          break;
+        case "faculty":
+          profile = await FacultyService.getOneFacultyByUserIdOrFacultyId(
+            account.user_id
+          );
+          break;
+
+        case "admin":
+          break;
+        case "superadmin":
           break;
 
         default:

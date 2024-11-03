@@ -21,7 +21,10 @@ class StudentController {
 
       await existingApplicant.delete();
 
-      const account = await AccountService.changeAccountType(user_id, 2);
+      const account = await AccountService.changeAccountType(
+        user_id,
+        "student"
+      );
 
       //   TODO: Send Mail
       new Response.Accepted(res)
