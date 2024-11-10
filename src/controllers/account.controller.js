@@ -296,7 +296,8 @@ class AccountController {
       );
 
       const { account, password } = await AccountService.createNewAccount(
-        personal_info.email
+        personal_info.email,
+        "applicant"
       );
 
       const applicant = await ApplicantService.createNewApplicant({
@@ -306,6 +307,12 @@ class AccountController {
       });
 
       // TODO: Send EMail
+      new MailSender.UserIdPasswordMail()
+        .setDestinationEmail(account.email)
+        .setSubject("Eduversa Account Creation Verification")
+        .setContent({ user_id: account.user_id, password })
+        .send();
+
       new Response.Created(res)
         .setMessage("Created Account Successfully")
         .setData({ account, applicant })
@@ -344,6 +351,7 @@ class AccountController {
       console.log("Error - AccountController - logIntoAccountUsingSocialMedia");
     }
   };
+
   // Done
   static changePassword = async (req, res, next) => {
     try {
