@@ -1,4 +1,5 @@
 const FacultyController = require("../controllers/faculty.controller");
+const { FileUploader } = require("../middlewares");
 const BaseRouter = require("./BASE.router");
 class FacultyRouter extends BaseRouter {
   configure() {
@@ -9,7 +10,11 @@ class FacultyRouter extends BaseRouter {
     // get one faculty
     this.router.get("/", FacultyController.getOneFaculty);
     // update faculty
-    this.router.put("/", FacultyController.updateFaculty);
+    this.router.put(
+      "/",
+      FileUploader.profileImage.single("image"),
+      FacultyController.updateFaculty
+    );
     // create faculty
     this.router.post("/", FacultyController.createNewFaculty);
     // delete faculty
@@ -46,9 +51,54 @@ class FacultyRouter extends BaseRouter {
             desc: "get single faculty by user_id",
           },
           {
+            method: "DELETE",
+            route: "/faculty/?user_id={{user_id}}",
+            desc: "Delete single faculty by user_id",
+          },
+          {
             method: "GET",
             route: "/faculty/all",
             desc: "get all faculty",
+          },
+
+          {
+            method: "PUT",
+            route:
+              "/faculty/?user_id={{user_id}}&type={{(Any One)->[personal, job, files]}}",
+            desc: "updates the faculty data based on the section of the profile form",
+            NOTE: "Give an object based on the type of profile data, for image-> {image: <imageData>}",
+            info: [
+              {
+                type: "personal",
+                body: [
+                  "name",
+                  "gender",
+                  "dob",
+                  "present_address->street, pincode, city, district, state",
+                  "permanent_address->street, pincode, city, district, state",
+                  "are_addresses_same",
+                  "email",
+                  "contact",
+                  "category",
+                  "blood_group",
+                  "aadhar_number",
+                  "pan_number",
+                ],
+              },
+              {
+                type: "job",
+                body: [
+                  "faculty_id",
+                  "room",
+                  "specialization",
+                  "assigned",
+                  "department",
+                  "joined",
+                  "salary",
+                  "designation",
+                ],
+              },
+            ],
           },
         ],
       });

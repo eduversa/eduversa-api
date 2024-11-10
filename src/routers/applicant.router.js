@@ -48,7 +48,7 @@ class ApplicantRouter extends BaseRouter {
           {
             method: "PUT",
             route:
-              "/applicant/?user_id={{user_id}}&type={{(Any One)->[personal, academic, family, course, files]}}&email={{email}}",
+              "/applicant/?user_id={{user_id}}&type={{(Any One)->[personal, academic, family, course, files]}}",
             desc: "updates the applicant data based on the section of the profile form",
             NOTE: "Give an object based on the type of profile data, for image-> {image: <imageData>}",
             info: [

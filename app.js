@@ -14,6 +14,7 @@ const {
   FacultyRouter,
   SubjectRouter,
   RoomRouter,
+  RoutineRouter,
 } = require("./src/routers");
 class App {
   app = express();
@@ -92,6 +93,7 @@ class App {
     this.app.use("/faculty", new FacultyRouter().configure().getRouter());
     this.app.use("/subject", new SubjectRouter().configure().getRouter());
     this.app.use("/room", new RoomRouter().configure().getRouter());
+    this.app.use("/routine", new RoutineRouter().configure().getRouter());
 
     // Section: Error Handlers
     this.app.use(handleError);

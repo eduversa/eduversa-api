@@ -4,9 +4,9 @@ const roomSchema = mongoose.Schema({
   id: { type: String, unique: true },
   name: { type: String },
   building: { type: String },
-  //   isClass: { type: Boolean },
   type: { type: String },
   capacity: { type: Number },
+  //   isClass: { type: Boolean },
 });
 
 const RoomModel = mongoose.model("room-data", roomSchema);

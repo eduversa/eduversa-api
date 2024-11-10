@@ -73,8 +73,8 @@ class FacultyController {
   // Done
   static updateFaculty = async (req, res, next) => {
     try {
-      const { user_id, type } = req.query;
-      const data = req.body;
+      let { user_id, type } = req.query;
+      let data = req.body;
       if (req.file) {
         data = req.file;
       }
@@ -98,6 +98,9 @@ class FacultyController {
     try {
       const user_id = req.query.user_id;
       const faculty = await FacultyService.deleteFacultyByUserId(user_id);
+      const account = await AccountService.deleteAccountByEmailOrUserId(
+        user_id
+      );
       new Response.Ok(res).setMessage("Faculty Deleted").send();
     } catch (error) {
       console.log("Error - FacultyController - Delete One faculty");

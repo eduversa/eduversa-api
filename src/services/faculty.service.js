@@ -1,4 +1,6 @@
 const FacultyRepository = require("../repositories/faculty.repository");
+const cloudinary = require("../config/cloudinary.config");
+const fs = require("fs");
 
 class FacultyService {
   static createNewFacultyUsingAccount = async (account) => {
@@ -48,6 +50,7 @@ class FacultyService {
         case "files":
           const filePath = __dirname + "/../../" + data.path;
           const fileName = data.filename;
+          console.log(filePath, fileName);
           const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload(
               filePath,
