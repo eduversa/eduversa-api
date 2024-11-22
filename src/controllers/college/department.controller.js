@@ -1,11 +1,17 @@
 const { Response } = require("../../helpers");
-const { DepartmentService } = require("../../services");
+const { DepartmentService, CourseService } = require("../../services");
 
 class DepartmentController {
+  // Done
   static createNewDepartment = async (req, res, next) => {
     try {
       const data = req.body;
+      const course = await CourseService.getCoursebyId(data.course_id);
       const department = await DepartmentService.createNewDepartment(data);
+      const updatedCourse = await CourseService.addDepartmentsToCourseById(
+        course.id,
+        [department.id]
+      );
       new Response.Created(res)
         .setMessage("Department Created successfully")
         .setData(department)
@@ -20,6 +26,7 @@ class DepartmentController {
     try {
       const data = req.body;
       const { id } = req.query;
+      const course = await CourseService.getCoursebyId(data.course_id);
       const department = await DepartmentService.updateDepartment(id, data);
       new Response.Ok(res)
         .setMessage("Department Updated successfully")
@@ -49,6 +56,10 @@ class DepartmentController {
     try {
       const { id } = req.query;
       const department = await DepartmentService.deleteDepartmentById(id);
+      const course = await CourseService.removeDepartmentsFromCourseById(
+        department.course_id,
+        [department.id]
+      );
       new Response.Ok(res)
         .setMessage("Department Deleted successfully")
         .setData(department)

@@ -8,6 +8,7 @@ const CollegeController = require("./college/college.controller");
 const SubjectController = require("./college/subject.controller");
 const RoomController = require("./college/room.controller");
 const DepartmentController = require("./college/department.controller");
+const CourseController = require("./college/course.controller");
 // Features
 const RoutineController = require("./features/routine.controller");
 const ScannerController = require("./features/scanner.controller");
@@ -23,6 +24,7 @@ module.exports = {
   SubjectController,
   RoomController,
   DepartmentController,
+  CourseController,
   // Features
   ScannerController,
   RoutineController,

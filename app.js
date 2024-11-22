@@ -16,6 +16,7 @@ const {
   RoomRouter,
   RoutineRouter,
   DepartmentRouter,
+  CourseRouter,
 } = require("./src/routers");
 class App {
   app = express();
@@ -81,6 +82,8 @@ class App {
           "/faculty/help",
           "/subject/help",
           "/room/help",
+          "/department/help",
+          "/course/help",
         ],
       });
     });
@@ -96,6 +99,7 @@ class App {
     this.app.use("/subject", new SubjectRouter().configure().getRouter());
     this.app.use("/room", new RoomRouter().configure().getRouter());
     this.app.use("/department", new DepartmentRouter().configure().getRouter());
+    this.app.use("/course", new CourseRouter().configure().getRouter());
     // Features
     this.app.use("/scanner", new ScannerRouter().configure().getRouter());
     this.app.use("/routine", new RoutineRouter().configure().getRouter());

@@ -8,6 +8,7 @@ const CollegeRouter = require("./college/college.router");
 const SubjectRouter = require("./college/subject.router");
 const RoomRouter = require("./college/room.router");
 const DepartmentRouter = require("./college/department.router");
+const CourseRouter = require("./college/course.router");
 // Features
 const ScannerRouter = require("./features/scanner.router");
 const RoutineRouter = require("./features/routine.router");
@@ -23,6 +24,7 @@ module.exports = {
   SubjectRouter,
   RoomRouter,
   DepartmentRouter,
+  CourseRouter,
   // Features
   ScannerRouter,
   RoutineRouter,
