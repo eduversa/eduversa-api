@@ -18,6 +18,7 @@ const {
   DepartmentRouter,
   CourseRouter,
 } = require("./src/routers");
+const { Response } = require("./src/helpers");
 class App {
   app = express();
   port = null;
@@ -65,7 +66,7 @@ class App {
       console.log("Uptime Robot Hit");
     });
     this.app.get("/connection", async (req, res) => {
-      res.send("API is working");
+      new Response.Ok(res).setMessage("The API is working").send();
     });
     this.app.delete("/connection/reset", async (req, res) => {
       //   clearAllCollections();

@@ -179,10 +179,27 @@ class AccountService {
       const account = new AccountRepository.Builder(existingAccount)
         .setIsOnline(is_online)
         .build();
+      console.log(account);
       await account.update({ user_id: account.user_id });
       return account.getPublicData();
     } catch (error) {
       console.log("Error - Account Service - Change Online Status");
+      throw error;
+    }
+  };
+  static updateQuickLinks = async (query, quick_links) => {
+    try {
+      const existingAccount = await new AccountRepository().mustExist({
+        $or: [{ email: query }, { user_id: query }],
+      });
+
+      const account = new AccountRepository.Builder(existingAccount)
+        .setQuickLinks(quick_links)
+        .build();
+      await account.update({ user_id: account.user_id });
+      return account.getPublicData();
+    } catch (error) {
+      console.log("Error - Account Service - Update Quick Links");
       throw error;
     }
   };

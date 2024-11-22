@@ -26,6 +26,8 @@ class AccountRouter extends BaseRouter {
     );
     // Route - /online
     this.router.put("/online", AccountController.changeOnlineStatus);
+    // Route - /quicklinks
+    this.router.put("/quicklinks", AccountController.updateQuickLinks);
     // Route - /auth
     this.router.post("/auth", AccountController.logIntoAccount);
     // Check: Add authentication
@@ -50,6 +52,19 @@ class AccountRouter extends BaseRouter {
       res.status(200).send({
         status: "This route is working",
         data: [
+          {
+            method: "PUT",
+            route: "/account/quicklinks?query={{user_id or email}}",
+            desc: "Changes the quicklinks in the account",
+            body: {
+              quick_links: [
+                {
+                  text: "text for link (eg. manage applicants)",
+                  url: "url for routing (eg. /manage/applicants)",
+                },
+              ],
+            },
+          },
           {
             method: "PUT",
             route:

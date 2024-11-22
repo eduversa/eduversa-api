@@ -4,16 +4,17 @@ const { Generator, ClientError } = require("../../helpers");
 const { AccountModel } = require("../../models");
 
 class AccountRepository {
-  security_token;
-  permissions;
-  email;
-  user_id;
-  password;
-  otp;
-  type;
-  access_level;
-  tokens;
-  is_online;
+  security_token = null;
+  permissions = null;
+  quick_links = null;
+  email = null;
+  user_id = null;
+  password = null;
+  otp = null;
+  type = null;
+  access_level = null;
+  tokens = null;
+  is_online = null;
   createdAt;
   updatedAt;
 
@@ -26,6 +27,7 @@ class AccountRepository {
   setAccountData(data) {
     this.security_token = data.security_token || null;
     this.permissions = data.permissions || null;
+    this.quick_links = data.quick_links || null;
     this.email = data.email || null;
     this.user_id = data.user_id || null;
     this.password = data.password || null;
@@ -33,7 +35,7 @@ class AccountRepository {
     this.type = data.type || null;
     this.access_level = data.access_level || null;
     this.tokens = data.tokens || null;
-    this.is_online = data.is_online || false;
+    this.is_online = data.is_online;
     this.createdAt = data.createdAt || null;
     this.updatedAt = data.updatedAt || null;
     return this;
@@ -172,29 +174,22 @@ class AccountRepository {
 
   static Builder = class {
     // Dropped: first_name, middle_name, last_name, phone
-    security_token;
-    permissions;
-    email;
-    user_id;
-    password;
-    otp;
-    type;
-    access_level;
-    tokens;
-    is_online;
+    security_token = null;
+    permissions = null;
+    quick_links = null;
+    email = null;
+    user_id = null;
+    password = null;
+    otp = null;
+    type = null;
+    access_level = null;
+    tokens = null;
+    is_online = null;
 
     constructor(data) {
+      this.setDefault();
       if (data && typeof data == "object") {
-        this.setSecurityToken(data.security_token)
-          .setPermissions(data.permissions)
-          .setEmail(data.email)
-          .setUserId(data.user_id)
-          .setPassword(data.password)
-          .setOtp(data.otp)
-          .setType(data.type)
-          .setAccessLevel(data.access_level)
-          .setTokens(data.tokens)
-          .setIsOnline(data.is_online || false);
+        this.setData(data);
       }
     }
 
@@ -204,12 +199,44 @@ class AccountRepository {
         .setUserId(Generator.getUserId())
         .setPassword(Generator.getPassword())
         .setOtp(Generator.getOtp())
-        .setIsOnline(false);
+        .setIsOnline(false)
+        .setQuickLinks([]);
       return this;
+    }
+
+    setData(data) {
+      const {
+        security_token,
+        permissions,
+        email,
+        user_id,
+        password,
+        otp,
+        type,
+        access_level,
+        tokens,
+        is_online,
+        quick_links,
+      } = data;
+      if (security_token) this.setSecurityToken(security_token);
+      if (permissions) this.setPermissions(permissions);
+      if (email) this.setEmail(email);
+      if (user_id) this.setUserId(user_id);
+      if (password) this.setPassword(password);
+      if (otp) this.setOtp(otp);
+      if (access_level) this.setAccessLevel(access_level);
+      if (type) this.setType(type);
+      if (tokens) this.setTokens(tokens);
+      if (is_online) this.setIsOnline(is_online);
+      if (quick_links) this.setQuickLinks(quick_links);
     }
     // Section: Setters
     setIsOnline(is_online) {
       this.is_online = is_online;
+      return this;
+    }
+    setQuickLinks(quick_links) {
+      this.quick_links = quick_links;
       return this;
     }
     setSecurityToken(token) {

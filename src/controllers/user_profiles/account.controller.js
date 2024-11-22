@@ -388,6 +388,24 @@ class AccountController {
       next(error);
     }
   };
+  // Done
+  static updateQuickLinks = async (req, res, next) => {
+    try {
+      const { query } = req.query;
+      const { quick_links } = req.body;
+
+      const account = await AccountService.updateQuickLinks(query, quick_links);
+
+      // TODO: Send Mail
+      new Response.Created(res)
+        .setMessage("QuickLinks Changed Successfully")
+        .setData(account)
+        .send();
+    } catch (error) {
+      console.log("Error - AccountController - updateQuickLinks");
+      next(error);
+    }
+  };
 }
 
 module.exports = AccountController;

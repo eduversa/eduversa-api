@@ -10,6 +10,16 @@ const accountSchema = mongoose.Schema(
         type: String,
       },
     ],
+    quick_links: [
+      {
+        text: {
+          type: String,
+        },
+        url: {
+          type: String,
+        },
+      },
+    ],
     first_name: {
       type: String,
     },
