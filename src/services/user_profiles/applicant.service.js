@@ -60,7 +60,7 @@ class ApplicantService {
           applicantBuilder.setCourseInfo(data);
           break;
         case "files":
-          const filePath = __dirname + "/../../" + data.path;
+          const filePath = __dirname + "/../../../" + data.path;
           const fileName = data.filename;
           const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload(

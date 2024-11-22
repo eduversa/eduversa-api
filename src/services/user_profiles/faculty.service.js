@@ -48,7 +48,7 @@ class FacultyService {
           facultyBuilder.setJobInfo(data);
           break;
         case "files":
-          const filePath = __dirname + "/../../" + data.path;
+          const filePath = __dirname + "/../../../" + data.path;
           const fileName = data.filename;
           console.log(filePath, fileName);
           const result = await new Promise((resolve, reject) => {
