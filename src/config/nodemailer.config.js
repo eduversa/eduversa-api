@@ -45,7 +45,13 @@ class Mail {
   setContent() {
     throw new Error("Method Implementation Not Found");
   }
-  send = () => {
+  send = (devMode = process.env.NODE_ENV === "development") => {
+    if (devMode) {
+      console.log("No Mail Sent");
+      return;
+    }
+    // if (devMode || process.env.NODE_ENV == "development") return;
+
     const mailOptions = {
       from: this.from,
       to: this.to,

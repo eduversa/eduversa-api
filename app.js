@@ -15,6 +15,7 @@ const {
   SubjectRouter,
   RoomRouter,
   RoutineRouter,
+  DepartmentRouter,
 } = require("./src/routers");
 class App {
   app = express();
@@ -85,14 +86,18 @@ class App {
     });
 
     // Section: Custom Routes
+    // User Profiles
     this.app.use("/account", new AccountRouter().configure().getRouter());
     this.app.use("/applicant", new ApplicantRouter().configure().getRouter());
     this.app.use("/student", new StudentRouter().configure().getRouter());
-    this.app.use("/college", new CollegeRouter().configure().getRouter());
-    this.app.use("/scanner", new ScannerRouter().configure().getRouter());
     this.app.use("/faculty", new FacultyRouter().configure().getRouter());
+    // College
+    this.app.use("/college", new CollegeRouter().configure().getRouter());
     this.app.use("/subject", new SubjectRouter().configure().getRouter());
     this.app.use("/room", new RoomRouter().configure().getRouter());
+    this.app.use("/department", new DepartmentRouter().configure().getRouter());
+    // Features
+    this.app.use("/scanner", new ScannerRouter().configure().getRouter());
     this.app.use("/routine", new RoutineRouter().configure().getRouter());
 
     // Section: Error Handlers

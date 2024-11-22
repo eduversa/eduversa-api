@@ -1,21 +1,29 @@
-const AccountRouter = require("./account.router");
-const ApplicantRouter = require("./applicant.router");
-const StudentRouter = require("./student.router");
-const CollegeRouter = require("./college.router");
-const ScannerRouter = require("./scanner.router");
-const FacultyRouter = require("./faculty.router");
-const SubjectRouter = require("./subject.router");
-const RoomRouter = require("./room.router");
-const RoutineRouter = require("./routine.router");
+// User Profiles
+const AccountRouter = require("./user_profiles/account.router");
+const ApplicantRouter = require("./user_profiles/applicant.router");
+const FacultyRouter = require("./user_profiles/faculty.router");
+const StudentRouter = require("./user_profiles/student.router");
+// College
+const CollegeRouter = require("./college/college.router");
+const SubjectRouter = require("./college/subject.router");
+const RoomRouter = require("./college/room.router");
+const DepartmentRouter = require("./college/department.router");
+// Features
+const ScannerRouter = require("./features/scanner.router");
+const RoutineRouter = require("./features/routine.router");
 
 module.exports = {
+  // User Profiles
   AccountRouter,
   ApplicantRouter,
   StudentRouter,
-  CollegeRouter,
-  ScannerRouter,
   FacultyRouter,
+  // College
+  CollegeRouter,
   SubjectRouter,
   RoomRouter,
+  DepartmentRouter,
+  // Features
+  ScannerRouter,
   RoutineRouter,
 };

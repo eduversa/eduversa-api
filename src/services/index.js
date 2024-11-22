@@ -1,21 +1,31 @@
-const AccountService = require("./account.service");
-const ApplicantService = require("./applicant.service");
 const AuthenticationService = require("./authentication.service");
-const CollegeService = require("./college.service");
-const FacultyService = require("./faculty.service");
-const RoomService = require("./room.service");
-const ScannerService = require("./scanner.service");
-const StudentService = require("./student.service");
-const SubjectService = require("./subject.service");
+// User Profiles
+const AccountService = require("./user_profiles/account.service");
+const ApplicantService = require("./user_profiles/applicant.service");
+const StudentService = require("./user_profiles/student.service");
+const FacultyService = require("./user_profiles/faculty.service");
+// College
+const CollegeService = require("./college/college.service");
+const SubjectService = require("./college/subject.service");
+const RoomService = require("./college/room.service");
+const CourseService = require("./college/course.service");
+const DepartmentService = require("./college/department.service");
+// Features
+const ScannerService = require("./features/scanner.service");
 
 module.exports = {
+  // User Profiles
   AccountService,
   ApplicantService,
   StudentService,
-  CollegeService,
-  ScannerService,
   FacultyService,
-  AuthenticationService,
+  // College
+  CollegeService,
   SubjectService,
   RoomService,
+  CourseService,
+  DepartmentService,
+  // Features
+  ScannerService,
+  AuthenticationService,
 };

@@ -30,6 +30,8 @@ class Generator {
   static getOtp = () => {
     return "12345678";
   };
+
+  // Section: ID Generators
   static getFacultyId = () => {
     return `F${this.getRandomNumber(3)}`;
   };
@@ -42,6 +44,10 @@ class Generator {
   static getUserId = () => {
     return `${new Date().getFullYear()}00${this.getRandomNumber(5)}`;
   };
+  static getDepartmentId = () => {
+    return `D${this.getRandomNumber(3)}`;
+  };
+
   static getPermissionCode = () => {
     return `${randomStringGenerator(20)}`;
   };

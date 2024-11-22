@@ -1,3 +1,5 @@
-class BaseRepository {
-  constructor() {}
-}
+// class BaseRepository {
+//   model = null;
+//   constructor() {}
+// }
+// module.exports = BaseRepository;

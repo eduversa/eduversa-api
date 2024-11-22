@@ -5,7 +5,7 @@ const handleError = (error, req, res, next) => {
     console.log(error);
 
     new Response.Custom(res)
-      .setStatusCode(error.statusCode || 400)
+      .setStatusCode(error.statusCode || 500)
       .setMessage(error.message || "Internal Server Error")
       .setAttribute("type", error.type)
       .send();
