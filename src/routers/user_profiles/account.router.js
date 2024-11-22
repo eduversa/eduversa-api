@@ -24,6 +24,8 @@ class AccountRouter extends BaseRouter {
       AccountController.verifyOtp,
       AccountController.getUserId
     );
+    // Route - /online
+    this.router.put("/online", AccountController.changeOnlineStatus);
     // Route - /auth
     this.router.post("/auth", AccountController.logIntoAccount);
     // Check: Add authentication
@@ -48,6 +50,12 @@ class AccountRouter extends BaseRouter {
       res.status(200).send({
         status: "This route is working",
         data: [
+          {
+            method: "PUT",
+            route:
+              "/account/online?query={{user_id or email}}&is_online={{true or false}}",
+            desc: "Changes account online status",
+          },
           {
             method: "POST",
             route: "/account?type={{account_type}}",

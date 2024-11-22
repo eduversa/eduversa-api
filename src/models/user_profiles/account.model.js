@@ -45,6 +45,9 @@ const accountSchema = mongoose.Schema(
       type: Number,
       default: 1,
     },
+    is_online: {
+      type: Boolean,
+    },
     tokens: [
       {
         token: { type: String },

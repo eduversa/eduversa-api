@@ -371,6 +371,23 @@ class AccountController {
       next(error);
     }
   };
+  // Done
+  static changeOnlineStatus = async (req, res, next) => {
+    try {
+      const { query, is_online } = req.query;
+
+      const account = await AccountService.changeOnlineStatus(query, is_online);
+
+      // TODO: Send Mail
+      new Response.Created(res)
+        .setMessage("Online Status Changed")
+        .setData(account)
+        .send();
+    } catch (error) {
+      console.log("Error - AccountController - changeOnlineStatus");
+      next(error);
+    }
+  };
 }
 
 module.exports = AccountController;

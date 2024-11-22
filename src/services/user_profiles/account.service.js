@@ -169,6 +169,23 @@ class AccountService {
       throw error;
     }
   };
+
+  static changeOnlineStatus = async (query, is_online) => {
+    try {
+      const existingAccount = await new AccountRepository().mustExist({
+        $or: [{ email: query }, { user_id: query }],
+      });
+
+      const account = new AccountRepository.Builder(existingAccount)
+        .setIsOnline(is_online)
+        .build();
+      await account.update({ user_id: account.user_id });
+      return account.getPublicData();
+    } catch (error) {
+      console.log("Error - Account Service - Change Online Status");
+      throw error;
+    }
+  };
 }
 
 module.exports = AccountService;

@@ -13,6 +13,7 @@ class AccountRepository {
   type;
   access_level;
   tokens;
+  is_online;
   createdAt;
   updatedAt;
 
@@ -32,6 +33,7 @@ class AccountRepository {
     this.type = data.type || null;
     this.access_level = data.access_level || null;
     this.tokens = data.tokens || null;
+    this.is_online = data.is_online || false;
     this.createdAt = data.createdAt || null;
     this.updatedAt = data.updatedAt || null;
     return this;
@@ -179,6 +181,7 @@ class AccountRepository {
     type;
     access_level;
     tokens;
+    is_online;
 
     constructor(data) {
       if (data && typeof data == "object") {
@@ -190,7 +193,8 @@ class AccountRepository {
           .setOtp(data.otp)
           .setType(data.type)
           .setAccessLevel(data.access_level)
-          .setTokens(data.tokens);
+          .setTokens(data.tokens)
+          .setIsOnline(data.is_online || false);
       }
     }
 
@@ -199,10 +203,15 @@ class AccountRepository {
         .setTokens([])
         .setUserId(Generator.getUserId())
         .setPassword(Generator.getPassword())
-        .setOtp(Generator.getOtp());
+        .setOtp(Generator.getOtp())
+        .setIsOnline(false);
       return this;
     }
     // Section: Setters
+    setIsOnline(is_online) {
+      this.is_online = is_online;
+      return this;
+    }
     setSecurityToken(token) {
       this.security_token = token;
       return this;
