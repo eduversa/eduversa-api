@@ -7,8 +7,9 @@ const FacultyModel = require("./user_profiles/faculty.model");
 const RoomModel = require("./college/room.model");
 const SubjectModel = require("./college/subject.model");
 const DepartmentModel = require("./college/department.model");
-// const CollegeModel = require("./college/college.model"); // Not Exported
 const CourseModel = require("./college/course.model");
+const CurriculumModel = require("./college/curriculum.model");
+// const CollegeModel = require("./college/college.model"); // Not Exported
 
 // Features
 
@@ -23,4 +24,5 @@ module.exports = {
   SubjectModel,
   DepartmentModel,
   CourseModel,
+  CurriculumModel,
 };

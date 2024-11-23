@@ -10,6 +10,7 @@ const SubjectService = require("./college/subject.service");
 const RoomService = require("./college/room.service");
 const CourseService = require("./college/course.service");
 const DepartmentService = require("./college/department.service");
+const CurriculumService = require("./college/curriculum.service");
 // Features
 const ScannerService = require("./features/scanner.service");
 
@@ -25,6 +26,7 @@ module.exports = {
   RoomService,
   CourseService,
   DepartmentService,
+  CurriculumService,
   // Features
   ScannerService,
   AuthenticationService,

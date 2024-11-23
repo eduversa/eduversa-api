@@ -8,6 +8,7 @@ const CourseRepository = require("./college/course.repository");
 const RoomRepository = require("./college/room.repository");
 const SubjectRepository = require("./college/subject.repository");
 const DepartmentRepository = require("./college/department.repository");
+const CurriculumRepository = require("./college/curriculum.repository");
 
 module.exports = {
   // User Profiles
@@ -20,4 +21,5 @@ module.exports = {
   RoomRepository,
   CourseRepository,
   DepartmentRepository,
+  CurriculumRepository,
 };

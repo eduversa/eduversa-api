@@ -50,6 +50,9 @@ class Generator {
   static getCourseId = () => {
     return `C${this.getRandomNumber(3)}`;
   };
+  static getCurriculumId = () => {
+    return `CC${this.getRandomNumber(3)}`;
+  };
 
   static getPermissionCode = () => {
     return `${randomStringGenerator(20)}`;
