@@ -34,10 +34,16 @@ class FacultyRepository {
 
   readMultiple = async (query) => {
     try {
-      const faculties = await FacultyModel.find(query);
+      let faculties = await FacultyModel.find(query);
       if (!faculties || faculties.length == 0) {
         throw new Error("Faculties Not Found");
       }
+      // console.log(faculties);
+      faculties = faculties.map((faculty) => {
+        console.log({ ...faculty });
+        // console.log({ ...faculty, course_info: faculty.job_info });
+        return { ...faculty._doc, course_info: faculty.job_info };
+      });
       return faculties;
     } catch (error) {
       console.log("Error - FacultyRepository - readMultiple");
