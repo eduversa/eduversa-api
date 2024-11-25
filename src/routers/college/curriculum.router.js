@@ -15,54 +15,52 @@ class CurriculumRouter extends BaseRouter {
 
     this.router.get("/help", (req, res) => {
       new Response.Ok(res)
-        .setMessage(
-          JSON.stringify([
-            {
-              method: "POST",
-              route: "/curriculum",
-              desc: "Creates a new Curriculum",
-              body: {
-                passout_year: Number,
-                department_id: String,
-                semester: Number,
-                subjects: [
-                  {
-                    id: String,
-                    assigned_faculty: [String("Faculty_Id")],
-                    classes_per_week: Number,
-                  },
-                ],
-              },
+        .setMessage([
+          {
+            method: "POST",
+            route: "/curriculum",
+            desc: "Creates a new Curriculum",
+            body: {
+              passout_year: Number,
+              department_id: String,
+              semester: Number,
+              subjects: [
+                {
+                  id: String,
+                  assigned_faculty: [String("Faculty_Id")],
+                  classes_per_week: Number,
+                },
+              ],
             },
-            {
-              method: "PUT",
-              route: "/curriculum?id={{curriculum_id}}",
-              desc: "Updates a Curriculum",
-              body: {
-                passout_year: Number,
-                department_id: String,
-                semester: Number,
-                subjects: [
-                  {
-                    id: String,
-                    assigned_faculty: [String("Faculty_Id")],
-                    classes_per_week: Number,
-                  },
-                ],
-              },
+          },
+          {
+            method: "PUT",
+            route: "/curriculum?id={{curriculum_id}}",
+            desc: "Updates a Curriculum",
+            body: {
+              passout_year: Number,
+              department_id: String,
+              semester: Number,
+              subjects: [
+                {
+                  id: String,
+                  assigned_faculty: [String("Faculty_Id")],
+                  classes_per_week: Number,
+                },
+              ],
             },
-            {
-              method: "GET",
-              route: "/curriculum?id={{curriculum_id}}",
-              desc: "Get a curriculum",
-            },
-            {
-              method: "DELETE",
-              route: "/curriculum?id={{curriculum_id}}",
-              desc: "Delete a curriculum",
-            },
-          ])
-        )
+          },
+          {
+            method: "GET",
+            route: "/curriculum?id={{curriculum_id}}",
+            desc: "Get a curriculum",
+          },
+          {
+            method: "DELETE",
+            route: "/curriculum?id={{curriculum_id}}",
+            desc: "Delete a curriculum",
+          },
+        ])
         .send();
     });
     return this;

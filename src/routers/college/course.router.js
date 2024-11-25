@@ -19,42 +19,40 @@ class CourseRouter extends BaseRouter {
     this.router.delete("/all");
 
     this.router.get("/help", (req, res) => {
-      new Response.Ok(res).setMessage(
-        JSON.stringify([
-          {
-            method: "POST",
-            route: "/course",
-            desc: "Creates a new course",
-            body: {
-              name: String,
-              departments: [String],
-              fees: Number,
-              duration: Number,
-            },
+      new Response.Ok(res).setMessage([
+        {
+          method: "POST",
+          route: "/course",
+          desc: "Creates a new course",
+          body: {
+            name: String,
+            departments: [String],
+            fees: Number,
+            duration: Number,
           },
-          {
-            method: "PUT",
-            route: "/course?id={{course_id}}",
-            desc: "Updates a course",
-            body: {
-              name: String,
-              departments: [String],
-              fees: Number,
-              duration: Number,
-            },
+        },
+        {
+          method: "PUT",
+          route: "/course?id={{course_id}}",
+          desc: "Updates a course",
+          body: {
+            name: String,
+            departments: [String],
+            fees: Number,
+            duration: Number,
           },
-          {
-            method: "GET",
-            route: "/course?id={{course_id}}",
-            desc: "Get a course",
-          },
-          {
-            method: "DELETE",
-            route: "/course?id={{course_id}}",
-            desc: "Delete a course",
-          },
-        ])
-      );
+        },
+        {
+          method: "GET",
+          route: "/course?id={{course_id}}",
+          desc: "Get a course",
+        },
+        {
+          method: "DELETE",
+          route: "/course?id={{course_id}}",
+          desc: "Delete a course",
+        },
+      ]);
     });
     return this;
   }

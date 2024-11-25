@@ -86,6 +86,8 @@ class App {
           "/room/help",
           "/department/help",
           "/course/help",
+          "/curriculum/help",
+          "/routine/help",
         ],
       });
     });
