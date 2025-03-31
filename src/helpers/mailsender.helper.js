@@ -34,9 +34,11 @@ class MailSender {
     }
   };
 
-  static otpMail = class extends Mail {
+  static OtpMail = class extends Mail {
     setContent({ otp }) {
-      const html = TemplateReader.otpTemplate().replace("{{OTP}}", otp);
+      const html = TemplateReader.otpTemplate()
+        .replace("{{OTP}}", otp)
+        .replace("{{DATE}}", new Date().toLocaleDateString());
       this.setHtml(html);
       return this;
     }
