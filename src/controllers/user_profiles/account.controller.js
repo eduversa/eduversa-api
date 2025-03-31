@@ -171,7 +171,13 @@ class AccountController {
         default:
           break;
       }
-      // TODO: Send Email
+      // CHECK: Send Email
+      new MailSender.AccountDeletionMail()
+        .setDestinationEmail(account.email)
+        .setSubject("Eduversa Account Deletion Verification")
+        .setContent({ user_id: account.user_id })
+        .send();
+
       new Response.Ok(res)
         .setMessage("Account Deleted Successfully")
         .setData(account)
@@ -186,6 +192,14 @@ class AccountController {
     try {
       const { query } = req.query;
       const account = await AccountService.generateNewOtp(query);
+
+      // CHECK: SEND Email
+      new MailSender.otpMail()
+        .setDestinationEmail(account.email)
+        .setSubject("OTP for your Eduversa Account")
+        .setContent({ otp: account.otp })
+        .send();
+
       new Response.Created(res)
         .setMessage("OTP has been sent to the email")
         .send();
@@ -211,7 +225,15 @@ class AccountController {
     try {
       const { query } = req.query;
       const account = await AccountService.getAccountByEmailOrUserId(query);
-      // TODO: Send Mail
+
+      // CHECK: Send Mail
+
+      new MailSender.UserIdRetreiveMail()
+        .setDestinationEmail(account.email)
+        .setSubject("Eduversa Account Creation Verification")
+        .setContent({ user_id: account.user_id, password })
+        .send();
+
       new Response.Ok(res)
         .setMessage("User ID has been sent to your email")
         .send();
@@ -306,7 +328,7 @@ class AccountController {
         personal_info,
       });
 
-      // TODO: Send EMail
+      // CHECK: Send EMail
       new MailSender.UserIdPasswordMail()
         .setDestinationEmail(account.email)
         .setSubject("Eduversa Account Creation Verification")
