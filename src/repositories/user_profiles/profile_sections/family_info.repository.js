@@ -319,10 +319,10 @@ class FamilyInfo {
         this.guardian.aadhar_number = aadhar_number;
       }
       if (email) {
-        this.father.email = email;
+        this.guardian.email = email;
       }
       if (contact) {
-        this.father.contact = contact;
+        this.guardian.contact = contact;
       }
       return this;
     }
