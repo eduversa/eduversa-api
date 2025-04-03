@@ -125,8 +125,9 @@ class AccountRepository {
   async mustExist(query = {}, err) {
     try {
       const account = await AccountModel.findOne(query);
-      if (!account)
+      if (!account) {
         throw err ? err : new ClientError.NotFound("Account does not exist");
+      }
       this.setAccountData(account);
       //   console.log("Account Read: " + this.email);
       return this;

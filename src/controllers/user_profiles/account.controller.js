@@ -194,7 +194,7 @@ class AccountController {
       const account = await AccountService.generateNewOtp(query);
 
       // CHECK: SEND Email
-      new MailSender.otpMail()
+      new MailSender.OtpMail()
         .setDestinationEmail(account.email)
         .setSubject("OTP for your Eduversa Account")
         .setContent({ otp: account.otp })

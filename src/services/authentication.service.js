@@ -15,7 +15,6 @@ class AuthenticationService {
         },
         new Error("Invalid Token Error")
       );
-
       const tokenData = jwt.verify(token, process.env.SECRET_KEY);
 
       if (tokenData.user_id !== account.user_id) {
@@ -24,7 +23,7 @@ class AuthenticationService {
 
       return account;
     } catch (error) {
-      console.log("Error - AuthenticationService - GetLoginStatus");
+      console.log("Error - AuthenticationService - getAccountFromToken");
       throw error;
     }
   };
