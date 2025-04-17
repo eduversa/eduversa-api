@@ -231,7 +231,7 @@ class AccountController {
       new MailSender.UserIdRetreiveMail()
         .setDestinationEmail(account.email)
         .setSubject("Eduversa Account Creation Verification")
-        .setContent({ user_id: account.user_id, password })
+        .setContent({ user_id: account.user_id })
         .send();
 
       new Response.Ok(res)
